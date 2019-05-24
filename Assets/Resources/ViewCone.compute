@@ -1,8 +1,98 @@
 ﻿#pragma kernel Main
-RWTexture2D<float4> Result;
+
+float2 _PlayerPosition;
+float _Range;
+float _WallBleed;
+
+RWTexture2D<float4> ColorBuffer;
+RWTexture2D<half> WallMask;
+
+float4x4 _ScreenToWorld;
+float4x4 _WorldToScreen;
+
+float4 GetWorldPos(uint3 id, float w, float h)
+{
+    float2 screenPos = float2(2.0f*id.x * (1.0f/w) - 1.0f, 
+    1.0f - 2.0f * id.y * (1.0f / h));
+#if UNITY_UV_STARTS_AT_TOP
+    screenPos.y = -screenPos.y;
+#endif
+    
+    float4 worldPos = mul(_ScreenToWorld, float4(screenPos,0,1));
+	worldPos /= worldPos.w;
+    return worldPos;
+}
+
+bool pixelHitWall(float2 p)
+{
+    float4 col = WallMask[uint2(p)];
+    return dot(col, 1) > 0.;
+}
+
+void drawLine(float2 start, float2 end, uint3 id, float width, float height) 
+{
+    float w = end.x - start.x;
+    float h = end.y - start.y;
+    
+    float2 d1 = float2(sign(w),sign(h));
+
+    float2 d2 = float2(sign(w),0);
+
+    float longest = abs(w);
+    float shortest = abs(h);
+    if (longest <= shortest) 
+    {
+        longest = abs(h);
+        shortest = abs(w);
+        d2.y = sign(h);
+        d2.x = 0;
+    }
+    float numerator = longest / 2.;
+    bool hitPoint = false;
+    float2 lastHitPoint = float2(-1,-1);
+    float bleedDist = 0;
+    for (int i = 0; i <= int(ceil(longest)); i++) 
+    {
+        if(pixelHitWall(start))
+        {
+            if(!hitPoint)
+            {
+                lastHitPoint = GetWorldPos(uint3(start,0), width, height).xy;
+                hitPoint = true;
+            }
+            else
+            {
+                float2 worldPos = GetWorldPos(uint3(start,0), width, height).xy;
+                bleedDist += distance(worldPos, lastHitPoint);
+            }
+        }
+        else
+        {
+            hitPoint = false;
+        }
+        numerator += shortest - (numerator >= longest ? longest : 0);
+        start += numerator >= longest ? d1 : d2;
+    }
+
+    ColorBuffer[id.xy] = ColorBuffer[id.xy] * (1-smoothstep(0, _WallBleed, bleedDist));
+    return;
+}
 
 [numthreads(8,8,1)]
 void Main (uint3 id : SV_DispatchThreadID)
 {
-    Result[id.xy] = float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
+    float w, h;
+    ColorBuffer.GetDimensions(w,h);
+    float2 worldPos = GetWorldPos(id, w, h).xy;
+    if(distance(_PlayerPosition, worldPos) > _Range)
+    {
+        ColorBuffer[id.xy] = 0;
+        return;
+    }
+
+    float2 screenPlayerPos = mul(_WorldToScreen, float4(_PlayerPosition, 0, 1)).xy;
+    screenPlayerPos += 1;
+    screenPlayerPos /= 2;
+    screenPlayerPos *= float2(w,h);
+    drawLine(float2(id.xy), screenPlayerPos, id, w, h);
 }
