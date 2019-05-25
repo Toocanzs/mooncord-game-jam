@@ -74,6 +74,8 @@ public class ViewCone : MonoBehaviour
 
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
+        int downscale = (int)math.round(((float)Screen.width)/1920);
+
         computeShader.SetVector("_PlayerPosition", new float4(((float3)Player.Instance.transform.position).xy, 0, 0));
 
         Matrix4x4 screenToWorld = (camera.projectionMatrix * camera.worldToCameraMatrix).inverse;
@@ -91,11 +93,23 @@ public class ViewCone : MonoBehaviour
         GL.Clear(true, true, Color.white);
         RenderTexture.active = rt;
 
-        computeShader.SetTexture(mainKernel, "ViewMask", viewMask);
-        computeShader.SetTexture(mainKernel, "WallMask", wallMask);
+        //Downscale to save performance
+        RenderTexture viewMaskTemp = RenderTexture.GetTemporary(new RenderTextureDescriptor(viewMask.width>> downscale, viewMask.height>> downscale, viewMask.format));
+        RenderTexture wallMaskTemp = RenderTexture.GetTemporary(new RenderTextureDescriptor(wallMask.width>> downscale, wallMask.height>> downscale, wallMask.format));
+        viewMaskTemp.enableRandomWrite = true;
+        wallMaskTemp.enableRandomWrite = true;
+        Graphics.Blit(viewMask, viewMaskTemp);
+        Graphics.Blit(wallMask, wallMaskTemp);
+
+        computeShader.SetTexture(mainKernel, "ViewMask", viewMaskTemp);
+        computeShader.SetTexture(mainKernel, "WallMask", wallMaskTemp);
 
         computeShader.Dispatch(mainKernel, (viewMask.width + 7) / 8,
          (viewMask.height + 7) / 8, 1);
+
+        Graphics.Blit(viewMaskTemp, viewMask);
+
+        RenderTexture.ReleaseTemporary(wallMaskTemp);
 
         float2 FOWcameraPos = ((float3)FogOfWarCamera.Instance.transform.position).xy;
         float2 cameraPos = ((float3)camera.transform.position).xy;
@@ -115,8 +129,9 @@ public class ViewCone : MonoBehaviour
         compositeMat.SetVector("cameraSize", new float4(cameraSize, 0, 0));
 
         compositeMat.SetTexture("_FogOfWar", FogOfWarCamera.Instance.activeTexture);
-        compositeMat.SetTexture("_ViewMask", viewMask);
-
+        compositeMat.SetTexture("_ViewMask", viewMaskTemp);
+        
         Graphics.Blit(colorRenderTexture, destination, compositeMat);
+        RenderTexture.ReleaseTemporary(viewMaskTemp);
     }
 }
