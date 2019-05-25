@@ -32,7 +32,6 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			float4 uvStartEnd;
 
 			v2f vert(appdata v)
 			{

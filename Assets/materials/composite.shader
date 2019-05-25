@@ -4,6 +4,8 @@
     {
         _MainTex("Texture", 2D) = "white" {}
 		_FogOfWar("Texture", 2D) = "white" {}
+		_ViewMask("Texture", 2D) = "white" {}
+		_FogOfWarBrightness("Fog Of War Brightness", float) = 0.5
     }
     SubShader
     {
@@ -40,11 +42,26 @@
 
             sampler2D _MainTex;
 			sampler2D _FogOfWar;
+			sampler2D _ViewMask;
+			float _FogOfWarBrightness;
+			float4 cameraStartEnd;
+			float4 FOWStartEnd;
+			float2 FOWsize;
+			float2 cameraSize;
 
             fixed4 frag (v2f i) : SV_Target
             {
+				float2 uv = i.uv;
+
                 fixed4 col = tex2D(_MainTex, i.uv);
-                return col;
+				fixed viewMask = tex2D(_ViewMask, i.uv);
+
+				float2 ratio = cameraSize / FOWsize;
+				float2 offset = (cameraStartEnd.xy - FOWStartEnd.xy)/(FOWsize*2);
+				uv *= ratio;
+				uv += offset;
+				fixed fow = tex2D(_FogOfWar, uv)*_FogOfWarBrightness;
+				return col * max(viewMask.rrrr, fow.rrrr);
             }
             ENDCG
         }

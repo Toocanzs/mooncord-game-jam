@@ -65,23 +65,11 @@ public class ViewCone : MonoBehaviour
 
     void Update()
     {
-        if(resolution.x != Screen.width || resolution.y != Screen.height)
+        if (resolution.x != Screen.width || resolution.y != Screen.height)
         {
             SetupRenderTextures();
             resolution = new int2(Screen.width, Screen.height);
         }
-
-        float2 FOWcameraPos = ((float3)FogOfWarCamera.Instance.transform.position).xy;
-        float2 cameraPos = ((float3)camera.transform.position).xy;
-        float2 FOWsize = new float2(FogOfWarCamera.Instance.orthographicSize * FogOfWarCamera.Instance.aspect, FogOfWarCamera.Instance.orthographicSize);
-        float2 FOWstart = FOWcameraPos - FOWsize;
-        float2 FOWend = FOWcameraPos + FOWsize;
-        float2 cameraSize = new float2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
-        float2 cameraStart = cameraPos - cameraSize;
-        float2 cameraEnd = cameraPos + cameraSize;
-
-        Debug.DrawLine(new float3(cameraStart.xy, 0), new float3(cameraEnd.xy, 0));
-        Debug.DrawLine(new float3(FOWstart.xy, 0), new float3(FOWend.xy, 0));
     }
 
     void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -109,9 +97,23 @@ public class ViewCone : MonoBehaviour
         computeShader.Dispatch(mainKernel, (viewMask.width + 7) / 8,
          (viewMask.height + 7) / 8, 1);
 
+        float2 FOWcameraPos = ((float3)FogOfWarCamera.Instance.transform.position).xy;
+        float2 cameraPos = ((float3)camera.transform.position).xy;
+        float2 FOWsize = new float2(FogOfWarCamera.Instance.orthographicSize * FogOfWarCamera.Instance.aspect, FogOfWarCamera.Instance.orthographicSize);
+        float2 FOWstart = FOWcameraPos - FOWsize;
+        float2 FOWend = FOWcameraPos + FOWsize;
+        float2 cameraSize = new float2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
+        float2 cameraStart = cameraPos - cameraSize;
+        float2 cameraEnd = cameraPos + cameraSize;
 
-        
-        //compositeMat.SetFloat("uvStartEnd", worldToScreen);
+        compositeMat.SetVector("cameraStartEnd", new float4(cameraStart, cameraEnd));
+        compositeMat.SetVector("FOWStartEnd", new float4(FOWstart, FOWend));
+
+        compositeMat.SetVector("FOWsize", new float4(FOWsize, 0, 0));
+        compositeMat.SetVector("cameraSize", new float4(cameraSize, 0, 0));
+
+        compositeMat.SetTexture("_FogOfWar", FogOfWarCamera.Instance.activeTexture);
+        compositeMat.SetTexture("_ViewMask", viewMask);
 
         Graphics.Blit(colorRenderTexture, destination, compositeMat);
     }

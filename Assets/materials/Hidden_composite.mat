@@ -19,9 +19,18 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _FogOfWar:
+        m_Texture: {fileID: 8400000, guid: cfd4e84ad13cf434aafb9f9900d32152, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
+    - _ViewMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _FogOfWarBrightness: 0.2
     m_Colors: []

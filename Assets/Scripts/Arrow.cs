@@ -11,7 +11,7 @@ public class Arrow : MonoBehaviour
     private LayerMask layerMask;
     void Start()
     {
-        
+        Destroy(gameObject, 6f);
     }
 
     void Update()
