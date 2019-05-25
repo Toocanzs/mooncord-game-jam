@@ -127,7 +127,7 @@
 				};
 
 
-				buffers SpriteFrag(v2f IN) : SV_Target
+				buffers SpriteFrag(v2f IN)
 				{
 					buffers o = (buffers)0;
 					fixed4 c = SampleSpriteTexture(IN.texcoord) * IN.color;

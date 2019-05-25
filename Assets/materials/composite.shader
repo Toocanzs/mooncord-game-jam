@@ -75,7 +75,7 @@
 				uv /= (FOWsize * 2);
 
 				fixed fow = tex2D(_FogOfWar, uv)*_FogOfWarBrightness;
-				return max(viewMask.rrrr, fow.rrrr);
+				return col * max(viewMask.rrrr, fow.rrrr);
             }
             ENDCG
         }

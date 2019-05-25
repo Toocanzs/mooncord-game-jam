@@ -1,9 +1,10 @@
-﻿Shader "Sprites/DefaultEnemy"
+﻿Shader "Sprites/Expandable"
 {
 	Properties
 	{
 		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
 		_Color("Tint", Color) = (1,1,1,1)
+		[Toggle]_IsWall("Is Wall", int) = 0
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 0
 		[HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
 		[HideInInspector] _Flip("Flip", Vector) = (1,1,1,1)
@@ -26,13 +27,6 @@
 			Lighting Off
 			ZWrite Off
 			Blend One OneMinusSrcAlpha
-
-			Stencil
-			{
-				Ref 5
-				Comp Equal
-				Pass Keep
-			}
 
 			Pass
 			{
@@ -83,6 +77,7 @@
 					float4 vertex   : SV_POSITION;
 					fixed4 color : COLOR;
 					float2 texcoord : TEXCOORD0;
+					float2 worldPos : TEXCOORD1;
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
 
@@ -102,6 +97,7 @@
 					OUT.vertex = UnityObjectToClipPos(OUT.vertex);
 					OUT.texcoord = IN.texcoord;
 					OUT.color = IN.color * _Color * _RendererColor;
+					OUT.worldPos = mul(unity_ObjectToWorld, IN.vertex);
 
 					#ifdef PIXELSNAP_ON
 					OUT.vertex = UnityPixelSnap(OUT.vertex);
@@ -136,10 +132,13 @@
 				buffers SpriteFrag(v2f IN)
 				{
 					buffers o = (buffers)0;
-					fixed4 c = SampleSpriteTexture(IN.texcoord) * IN.color;
+					fixed4 c = SampleSpriteTexture(IN.worldPos) * IN.color;
 					c.rgb *= c.a;
 					o.color = c;
-					o.mask = 0;
+					if (_IsWall)
+						o.mask = 1;
+					else
+						o.mask = 0;
 					return o;
 				}
 				ENDCG
