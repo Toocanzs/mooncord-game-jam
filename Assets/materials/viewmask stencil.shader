@@ -8,7 +8,7 @@
     {
         Tags { "RenderType"="Transparent" "Queue"="Background+1"}
 		ZWrite Off
-		//Colormask 0
+		
 		Stencil
 		{
 			Ref 5
@@ -17,6 +17,7 @@
 		}
         Pass
         {
+			ColorMask 0
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -51,7 +52,7 @@
                 fixed4 col = tex2D(_MainTex, i.uv);
 				if (col.r <= 0)
 					discard;
-                return col.r;
+                return 1;
             }
             ENDCG
         }

@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Enemey
-  m_Shader: {fileID: 4800000, guid: 8259d536868d8de42ae8b8686b6015fe, type: 3}
-  m_ShaderKeywords: 
+  m_Name: Enemy
+  m_Shader: {fileID: 4800000, guid: e68aeb054c826d143a75c71ec56fda38, type: 3}
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
