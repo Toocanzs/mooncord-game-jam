@@ -56,7 +56,6 @@ public class PlayerDash : MonoBehaviour
         if(dashing)
         {
             playerVelocity.velocity = 0;
-            Debug.DrawLine(new Vector3(dashStartPoint.x, dashStartPoint.y, 0), new Vector3(dashEndPoint.x, dashEndPoint.y, 0));
             float dashTotalTime = math.distance(dashStartPoint, dashEndPoint) / dashSpeed;
             if (dashTotalTime <= 0f)
             {
@@ -66,7 +65,7 @@ public class PlayerDash : MonoBehaviour
             else
             {
                 dashTime += Time.deltaTime;
-                float2 pos = math.lerp(dashStartPoint, dashEndPoint, dashTime / dashTotalTime);
+                float2 pos = math.lerp(dashStartPoint, dashEndPoint, math.saturate(dashTime / dashTotalTime));
                 transform.position = new Vector3(pos.x, pos.y, 0);
                 if (dashTime > dashTotalTime)
                 {
