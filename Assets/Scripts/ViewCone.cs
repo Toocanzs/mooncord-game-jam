@@ -103,12 +103,14 @@ public class ViewCone : MonoBehaviour
         float2 FOWstart = FOWcameraPos - FOWsize;
         float2 FOWend = FOWcameraPos + FOWsize;
         float2 cameraSize = new float2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
-        float2 cameraStart = cameraPos - cameraSize;
-        float2 cameraEnd = cameraPos + cameraSize;
+
+        float2 cameraStart = ((float3)camera.ScreenToWorldPoint(new Vector3(0,0,0))).xy;
+        float2 cameraEnd = ((float3)camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth, camera.pixelHeight, 0))).xy;
+        float cameraAngle = camera.transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
 
         compositeMat.SetVector("cameraStartEnd", new float4(cameraStart, cameraEnd));
         compositeMat.SetVector("FOWStartEnd", new float4(FOWstart, FOWend));
-
+        compositeMat.SetFloat("cameraAngle", cameraAngle);
         compositeMat.SetVector("FOWsize", new float4(FOWsize, 0, 0));
         compositeMat.SetVector("cameraSize", new float4(cameraSize, 0, 0));
 

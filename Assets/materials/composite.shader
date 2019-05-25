@@ -48,20 +48,34 @@
 			float4 FOWStartEnd;
 			float2 FOWsize;
 			float2 cameraSize;
+			float cameraAngle;
 
             fixed4 frag (v2f i) : SV_Target
             {
-				float2 uv = i.uv;
-
                 fixed4 col = tex2D(_MainTex, i.uv);
 				fixed viewMask = tex2D(_ViewMask, i.uv);
 
 				float2 ratio = cameraSize / FOWsize;
-				float2 offset = (cameraStartEnd.xy - FOWStartEnd.xy)/(FOWsize*2);
-				uv *= ratio;
-				uv += offset;
+
+				float c = cos(cameraAngle);
+				float s = sin(cameraAngle);
+				float2x2 rot = float2x2(c, -s, s, c);
+
+				float2 FOWtopRight = FOWStartEnd.zw;
+				float2 FOWbottomLeft = FOWStartEnd.xy;
+				float2 cameraTopRight = cameraStartEnd.zw;
+				float2 cameraBottomLeft = cameraStartEnd.xy;
+				float2 cameraCenter = (cameraStartEnd.xy + cameraStartEnd.zw) / 2;
+
+				float2 uv = i.uv;
+				uv *= cameraSize*2;
+				uv = mul(rot, uv);
+				uv += cameraBottomLeft;
+				uv -= FOWbottomLeft;
+				uv /= (FOWsize * 2);
+
 				fixed fow = tex2D(_FogOfWar, uv)*_FogOfWarBrightness;
-				return col * max(viewMask.rrrr, fow.rrrr);
+				return max(viewMask.rrrr, fow.rrrr);
             }
             ENDCG
         }
