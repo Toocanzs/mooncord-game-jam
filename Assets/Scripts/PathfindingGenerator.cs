@@ -86,8 +86,6 @@ namespace ThetaStar
 
         private Dictionary<Vector3Int, Vertex> positionToVertex = new Dictionary<Vector3Int, Vertex>();
 
-        List<Vector3> foundPath;
-
         void Start()
         {
             foreach (Tilemap tilemap in tilemaps)
@@ -96,15 +94,14 @@ namespace ThetaStar
                 tilemapsEnd = Vector3Int.Max(tilemap.cellBounds.position + tilemap.cellBounds.size, tilemapsEnd);
             }
             tilemapSize = tilemapsEnd - tilemapsStart;
-            
+
             CreateVertices();
             SetupNeighbors();
-            foundPath = FindPath(startTest.position, endTest.position);
         }
 
-        public int Heuristic(Vector3Int pos, Vector3Int end)
+        public int Heuristic(Vector3Int pos, Vector3 end)
         {
-            return Mathf.FloorToInt(Vector3.Distance((Vector3)pos + new Vector3(0.5f,0.5f,0), (Vector3)end + new Vector3(0.5f, 0.5f, 0)));
+            return Mathf.FloorToInt(Vector3.Distance((Vector3)pos + new Vector3(0.5f, 0.5f, 0), end + new Vector3(0.5f, 0.5f, 0)));
         }
 
         public List<Vector3> FindPath(float3 startpos, float3 endpos)
@@ -117,18 +114,26 @@ namespace ThetaStar
             start.gValue = 0;
             Dictionary<Vertex, Vertex> parent = new Dictionary<Vertex, Vertex>();
 
+            int lowestH = int.MaxValue;
+            Vertex lowestHVertex = null;
+
             void Insert(Vertex vertex)
             {
-                vertex.hValue = Heuristic(vertex.position, end.position);
+                vertex.hValue = Heuristic(vertex.position, endpos);
+                if (vertex.hValue < lowestH)
+                {
+                    lowestH = vertex.hValue;
+                    lowestHVertex = vertex;
+                }
                 open.Enqueue(vertex);
             }
             void UpdateVertex(Vertex s, Vertex sPrime)
             {
                 var gOld = sPrime.gValue;
                 ComputeCost(s, sPrime);
-                if(sPrime.gValue < gOld)
+                if (sPrime.gValue < gOld)
                 {
-                    if(open.Contains(sPrime))
+                    if (open.Contains(sPrime))
                     {
                         open.Remove(sPrime);
                     }
@@ -151,7 +156,7 @@ namespace ThetaStar
                 }
                 else
                 {
-                    if(s.gValue + C(s, sPrime) < sPrime.gValue)
+                    if (s.gValue + C(s, sPrime) < sPrime.gValue)
                     {
                         parent[sPrime] = s;
                         sPrime.gValue = s.gValue + C(s, sPrime);
@@ -162,19 +167,19 @@ namespace ThetaStar
             parent[start] = start;
             Insert(start);
 
-            while(open.Count() > 0)
+            while (open.Count() > 0)
             {
                 var s = open.Dequeue();
-                if(s.Equals(end))
+                if (s.Equals(end))
                 {
-                    return GetPath(parent, end, start, startpos, endpos);
+                    return GetPath(parent, end, start, startpos, endpos, true);
                 }
                 closed.Add(s);
-                foreach(var sPrime in s.Neighbors)
+                foreach (var sPrime in s.Neighbors)
                 {
-                    if(!closed.Contains(sPrime))
+                    if (!closed.Contains(sPrime))
                     {
-                        if(!open.Contains(sPrime))
+                        if (!open.Contains(sPrime))
                         {
                             sPrime.gValue = int.MaxValue;
                             parent[sPrime] = null;
@@ -183,19 +188,23 @@ namespace ThetaStar
                     }
                 }
             }
-            Debug.Log("No path found");
-            return null;
+
+            //No path. Return path from lowest H value
+            return GetPath(parent, lowestHVertex, start, startpos, endpos, false);
         }
 
-        private List<Vector3> GetPath(Dictionary<Vertex, Vertex> parent, Vertex end, Vertex start, Vector3 startPos, Vector3 endPos)
+        private List<Vector3> GetPath(Dictionary<Vertex, Vertex> parent, Vertex end, Vertex start, Vector3 startPos, Vector3 endPos, bool validPath)
         {
             List<Vector3> path = new List<Vector3>();
             Vertex current = end;
-            path.Add(endPos);
-            while(!current.Equals(start))
+            if (validPath)
+                path.Add(endPos);
+            else
+                path.Add(end.position);
+            while (!current.Equals(start))
             {
-                if(!current.Equals(end))
-                    path.Add(current.position + new Vector3(0.5f,0.5f,0));
+                if (!current.Equals(end))
+                    path.Add(current.position + new Vector3(0.5f, 0.5f, 0));
                 current = parent[current];
             }
             path.Add(startPos);
@@ -205,10 +214,11 @@ namespace ThetaStar
 
         private bool LineOfSight(Vertex s, Vertex sPrime)
         {
-            Vector3 start = (Vector3)s.position + new Vector3(0.5f,0.5f,0);
+            Vector3 start = (Vector3)s.position + new Vector3(0.5f, 0.5f, 0);
             Vector3 end = (Vector3)sPrime.position + new Vector3(0.5f, 0.5f, 0);
             Vector3 difference = end - start;
-            RaycastHit2D hit = Physics2D.Raycast(start,
+            RaycastHit2D hit = Physics2D.CircleCast(start,
+                0.4f,//Radius for enemies
                 math.normalize(difference).xy,
                 math.length(difference), layerMask);
             return hit.transform == null;
@@ -235,7 +245,7 @@ namespace ThetaStar
                                     continue;
                                 if (positionToVertex.TryGetValue(pos + new Vector3Int(i, j, 0), out Vertex neighbor))
                                 {
-                                    if(neighbor.colliderType == ColliderType.None)
+                                    if (neighbor.colliderType == ColliderType.None)
                                         vertex.AddNeighbor(neighbor);
                                 }
                             }
@@ -266,14 +276,7 @@ namespace ThetaStar
 
         void Update()
         {
-            for(int i = 0; i < foundPath.Count; i++)
-            {
-                if (i == 0)
-                    continue;
-                Vector3 pos = foundPath[i];
-                Vector3 last = foundPath[i - 1];
-                Debug.DrawLine(pos, last, Color.red);
-            }
+
         }
     }
 
