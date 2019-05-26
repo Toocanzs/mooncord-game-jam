@@ -42,7 +42,7 @@ public class PlayerDash : MonoBehaviour
             dashing = true;
             playerMovement.enabled = false;
             dashTime = 0f;
-            RaycastHit2D hit = Physics2D.CircleCast(transform.position, collider.radius, dashDirection, maxDashDistance, gameObject.layer);
+            RaycastHit2D hit = Physics2D.CircleCast(transform.position, collider.radius, dashDirection, maxDashDistance, PlayerLayerMask.Instance.layerMask);
             dashStartPoint = ((float3)transform.position).xy;
             if (hit.transform == null)
             {

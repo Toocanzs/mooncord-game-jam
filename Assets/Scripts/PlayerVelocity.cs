@@ -16,7 +16,7 @@ public class PlayerVelocity : MonoBehaviour
 
     void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, math.normalize(velocity), math.length(velocity) * Time.deltaTime, gameObject.layer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, math.normalize(velocity), math.length(velocity) * Time.deltaTime, PlayerLayerMask.Instance.layerMask);
         if(hit.transform != null)
         {
             velocity = 0;

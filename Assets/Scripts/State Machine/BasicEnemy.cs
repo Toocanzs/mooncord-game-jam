@@ -11,18 +11,20 @@ public class BasicEnemy : MonoBehaviour
     public float wanderRange = 3f;
     public float wanderSpeed = 3f;
     public float wanderResetTime = 3f;
+    private Dictionary<Type, BaseState> states;
     void Start()
     {
         stateMachine = GetComponent<StateMachine>();
         rigidbody = GetComponent<Rigidbody2D>();
-    }
-
-    void Update()
-    {
-        var states = new Dictionary<Type, BaseState>
+        states = new Dictionary<Type, BaseState>
         {
             { typeof(WanderState), new WanderState(this)},
         };
         stateMachine.SetStates(states);
+    }
+
+    void Update()
+    {
+        
     }
 }
