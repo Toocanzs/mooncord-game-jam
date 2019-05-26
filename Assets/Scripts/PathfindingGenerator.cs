@@ -42,8 +42,10 @@ namespace ThetaStar
             return position.GetHashCode();
         }
     }
+    [DefaultExecutionOrder(-100)]
     public class PathfindingGenerator : MonoBehaviour
     {
+        public static PathfindingGenerator Instance;
         [SerializeField]
         private GameObject testObject;
         [SerializeField]
@@ -88,6 +90,14 @@ namespace ThetaStar
 
         void Start()
         {
+            if(Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
             foreach (Tilemap tilemap in tilemaps)
             {
                 tilemapsStart = Vector3Int.Min(tilemap.cellBounds.position, tilemapsStart);
@@ -245,7 +255,7 @@ namespace ThetaStar
                                     continue;
                                 if (positionToVertex.TryGetValue(pos + new Vector3Int(i, j, 0), out Vertex neighbor))
                                 {
-                                    if (neighbor.colliderType == ColliderType.None)
+                                    if (neighbor.colliderType == ColliderType.None && LineOfSight(vertex, neighbor))
                                         vertex.AddNeighbor(neighbor);
                                 }
                             }

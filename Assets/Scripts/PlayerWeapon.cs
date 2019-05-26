@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using System;
-
+[RequireComponent(typeof(AudioSource))]
 public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField]
@@ -13,9 +13,13 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField]
     private float attackSpeed = 1f;
 
+    AudioSource audioSource;
+    AudioClip clip;
+
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+        clip = audioSource.clip;
     }
 
     void Update()
@@ -36,6 +40,7 @@ public class PlayerWeapon : MonoBehaviour
 
     private void Shoot(float2 dir)
     {
+        audioSource.PlayOneShot(clip);
         float angle = math.degrees(math.atan2(dir.y, dir.x));
         GameObject arrow = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(new Vector3(0,0, angle)));
     }
