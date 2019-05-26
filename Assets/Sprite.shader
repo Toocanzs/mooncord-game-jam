@@ -3,6 +3,7 @@
 	Properties
 	{
 		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
+		[HDR]
 		_Color("Tint", Color) = (1,1,1,1)
 		[Toggle]_IsWall("Is Wall", int) = 0
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 0
@@ -43,7 +44,7 @@
 
 					UNITY_INSTANCING_BUFFER_START(PerDrawSprite)
 					// SpriteRenderer.Color while Non-Batched/Instanced.
-					UNITY_DEFINE_INSTANCED_PROP(fixed4, unity_SpriteRendererColorArray)
+					UNITY_DEFINE_INSTANCED_PROP(float4, unity_SpriteRendererColorArray)
 					// this could be smaller but that's how bit each entry is regardless of type
 					UNITY_DEFINE_INSTANCED_PROP(fixed2, unity_SpriteFlipArray)
 					UNITY_INSTANCING_BUFFER_END(PerDrawSprite)
@@ -55,14 +56,14 @@
 
 				CBUFFER_START(UnityPerDrawSprite)
 				#ifndef UNITY_INSTANCING_ENABLED
-					fixed4 _RendererColor;
+					float4 _RendererColor;
 					fixed2 _Flip;
 				#endif
 					float _EnableExternalAlpha;
 				CBUFFER_END
 
 				// Material Color.
-				fixed4 _Color;
+				float4 _Color;
 
 				struct appdata_t
 				{
@@ -75,7 +76,7 @@
 				struct v2f
 				{
 					float4 vertex   : SV_POSITION;
-					fixed4 color : COLOR;
+					float4 color : COLOR;
 					float2 texcoord : TEXCOORD0;
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
@@ -108,12 +109,12 @@
 				sampler2D _AlphaTex;
 				bool _IsWall;
 
-				fixed4 SampleSpriteTexture(float2 uv)
+				float4 SampleSpriteTexture(float2 uv)
 				{
-					fixed4 color = tex2D(_MainTex, uv);
+					float4 color = tex2D(_MainTex, uv);
 
 				#if ETC1_EXTERNAL_ALPHA
-					fixed4 alpha = tex2D(_AlphaTex, uv);
+					float4 alpha = tex2D(_AlphaTex, uv);
 					color.a = lerp(color.a, alpha.r, _EnableExternalAlpha);
 				#endif
 
@@ -122,7 +123,7 @@
 
 				struct buffers
 				{
-					fixed4 color : COLOR0;
+					float4 color : COLOR0;
 					half mask : COLOR1;
 				};
 
@@ -130,7 +131,7 @@
 				buffers SpriteFrag(v2f IN)
 				{
 					buffers o = (buffers)0;
-					fixed4 c = SampleSpriteTexture(IN.texcoord) * IN.color;
+					float4 c = SampleSpriteTexture(IN.texcoord) * IN.color;
 					c.rgb *= c.a;
 					o.color = c;
 					if (_IsWall)
