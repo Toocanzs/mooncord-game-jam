@@ -10,6 +10,11 @@ public class PlayerDash : MonoBehaviour
     float maxDashDistance = 1f;
     [SerializeField]
     float dashSpeed = 5f;
+    [SerializeField]
+    private AudioClip dashSound;
+
+    private AudioSource audioSource;
+
     private PlayerMovement playerMovement;
 
     public float dashTime;
@@ -24,6 +29,7 @@ public class PlayerDash : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         collider = GetComponent<CircleCollider2D>();
         playerVelocity = GetComponent<PlayerVelocity>();
+        audioSource = GetComponent<AudioSource>();
     }
     void OnDisable()
     {
@@ -39,6 +45,7 @@ public class PlayerDash : MonoBehaviour
         }
         if (Input.GetButtonDown("Jump") && !dashing)
         {
+            audioSource.PlayOneShot(dashSound, 0.5f);
             dashing = true;
             playerMovement.enabled = false;
             dashTime = 0f;

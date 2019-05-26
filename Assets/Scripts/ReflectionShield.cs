@@ -12,7 +12,6 @@ public class ReflectionShield : MonoBehaviour
 
     void Update()
     {
-        
     }
 
     void OnCollisionEnter2D(Collision2D collision)

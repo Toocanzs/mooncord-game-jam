@@ -41,6 +41,9 @@ public class Boss1 : MonoBehaviour
         if(Input.GetButtonDown("Fire2") && !hitSnapState)
         {
             stateMachine.SwitchToNextState(typeof(SnapState));
+            var snapstate = ((SnapState)states[typeof(SnapState)]);
+            snapstate.time = snapstate.totalWaitTime - 1f;
+            Destroy(scanAudioSource.gameObject);
         }
     }
 }

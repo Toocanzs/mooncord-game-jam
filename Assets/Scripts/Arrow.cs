@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using System;
+
+[RequireComponent(typeof(AudioSource))]
 public class Arrow : MonoBehaviour
 {
     [SerializeField]
@@ -9,9 +12,27 @@ public class Arrow : MonoBehaviour
     private bool hitWall = false;
     [SerializeField]
     private LayerMask layerMask;
+    [SerializeField]
+    private bool reflectable = true;
+    [SerializeField]
+    private bool destroyOnHit = true;
+    [SerializeField]
+    private bool destroyTimeout = true;
+    [SerializeField]
+    private bool parentOnHit = true;
+    [SerializeField]
+    private AudioClip onHitClip;
+    private AudioSource audioSource;
+    [SerializeField]
+    private GameObject[] disableOnHit;
+
+    public event Action<RaycastHit2D> OnHit = delegate { };
+
     void Start()
     {
-        Destroy(gameObject, 6f);
+        if(destroyTimeout)
+            Destroy(gameObject, 6f);
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -25,21 +46,30 @@ public class Arrow : MonoBehaviour
             }
             else
             {
-                if (hit.collider.transform.GetComponent<ReflectionShield>() != null)
+                if (reflectable && hit.collider.transform.GetComponent<ReflectionShield>() != null)
                 {
-                    var reflected = Vector2.Reflect(transform.right, hit.normal);
-                    var angle = Vector2.Angle(Vector2.right, reflected) *  Mathf.Rad2Deg;
+                    ReflectionShield shield = hit.collider.transform.GetComponent<ReflectionShield>();
+                    var reflected = Vector2.Reflect(transform.right, hit.normal).normalized;
                     transform.right = reflected;
 
-                    transform.position = hit.collider.transform.position 
-                        + (Vector3.Normalize(transform.position - hit.collider.transform.position) * hit.collider.bounds.size.x / 2f) 
-                        + new Vector3(reflected.x, reflected.y, 0) * velocity * Time.deltaTime;
+                    transform.position = new Vector3(hit.point.x, hit.point.y, 0)
+                        + ((new Vector3(reflected.x, reflected.y, 0) * velocity * Time.deltaTime));
                 }
                 else
                 {
                     transform.position = hit.point;
                     hitWall = true;
-                    Destroy(this);
+                    foreach(var go in disableOnHit)
+                    {
+                        go.SetActive(false);
+                    }
+                    OnHit(hit);
+                    if (parentOnHit)
+                        transform.parent = hit.collider.transform;
+                    if(onHitClip != null)
+                        audioSource.PlayOneShot(onHitClip);
+                    if(destroyOnHit)
+                        Destroy(this);
                 }
             }
         }

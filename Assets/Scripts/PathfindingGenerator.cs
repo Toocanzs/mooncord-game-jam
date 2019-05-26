@@ -230,10 +230,10 @@ namespace ThetaStar
         {
             List<Vector3> path = new List<Vector3>();
             Vertex current = end;
-            if (validPath)
+            if (validPath && LineOfSight(endPos, parent[end].position))
                 path.Add(endPos);
             else
-                path.Add(end.position);
+                path.Add(end.position + new Vector3(0.5f, 0.5f, 0));
             while (!current.Equals(start))
             {
                 if (!current.Equals(end))
@@ -247,8 +247,13 @@ namespace ThetaStar
 
         private bool LineOfSight(Vertex s, Vertex sPrime)
         {
-            Vector3 start = (Vector3)s.position + new Vector3(0.5f, 0.5f, 0);
-            Vector3 end = (Vector3)sPrime.position + new Vector3(0.5f, 0.5f, 0);
+            return LineOfSight(s.position, sPrime.position);
+        }
+
+        private bool LineOfSight(Vector3 s, Vector3 sPrime)
+        {
+            Vector3 start = (Vector3)s + new Vector3(0.5f, 0.5f, 0);
+            Vector3 end = (Vector3)sPrime + new Vector3(0.5f, 0.5f, 0);
             Vector3 difference = end - start;
             RaycastHit2D hit = Physics2D.CircleCast(start,
                 0.4f,//Radius for enemies

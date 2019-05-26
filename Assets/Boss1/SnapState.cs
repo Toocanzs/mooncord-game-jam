@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class SnapState : BaseState
 {
-    private float totalWaitTime;
-    private float time;
+    public float totalWaitTime;
+    public float time;
     private Quaternion startRotation;
     private Boss1 boss;
     private bool played = false;
