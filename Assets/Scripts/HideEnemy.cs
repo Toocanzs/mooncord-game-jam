@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class HideEnemy : MonoBehaviour
 {
+    [SerializeField]
+    private Material materialOverride;
     void Start()
     {
-        GetComponent<SpriteRenderer>().sharedMaterial = GlobalMaterials.Instance.hiddenEnemyMaterial;
+        if(materialOverride == null)
+            GetComponent<SpriteRenderer>().sharedMaterial = GlobalMaterials.Instance.hiddenEnemyMaterial;
+        else
+            GetComponent<SpriteRenderer>().sharedMaterial = materialOverride;
     }
 
     void Update()

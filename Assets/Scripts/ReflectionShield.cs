@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(CircleCollider2D))]
 public class ReflectionShield : MonoBehaviour
 {
+    public bool deletesOnHit = false;
     CircleCollider2D circleCollider;
+
     void Start()
     {
         circleCollider = GetComponent<CircleCollider2D>();

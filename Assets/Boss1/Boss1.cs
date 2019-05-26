@@ -18,9 +18,11 @@ public class Boss1 : MonoBehaviour
     public AudioClip scanSnapClip;
     public AudioClip scanTargetFound;
 
-    public GameObject shieldGameObject;
+    public BatteryManager batteryManager;
     [HideInInspector]
     public bool hitSnapState = false;
+
+    public int phase = 0;
 
     void Start()
     {

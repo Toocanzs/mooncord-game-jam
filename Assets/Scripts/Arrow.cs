@@ -26,6 +26,8 @@ public class Arrow : MonoBehaviour
     [SerializeField]
     private GameObject[] disableOnHit;
 
+    float damage = 1f;
+
     public event Action<RaycastHit2D> OnHit = delegate { };
 
     void Start()
@@ -49,14 +51,24 @@ public class Arrow : MonoBehaviour
                 if (reflectable && hit.collider.transform.GetComponent<ReflectionShield>() != null)
                 {
                     ReflectionShield shield = hit.collider.transform.GetComponent<ReflectionShield>();
-                    var reflected = Vector2.Reflect(transform.right, hit.normal).normalized;
-                    transform.right = reflected;
+                    if (shield.deletesOnHit)
+                    {
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        var reflected = Vector2.Reflect(transform.right, hit.normal).normalized;
+                        transform.right = reflected;
 
-                    transform.position = new Vector3(hit.point.x, hit.point.y, 0)
-                        + ((new Vector3(reflected.x, reflected.y, 0) * velocity * Time.deltaTime));
+                        transform.position = new Vector3(hit.point.x, hit.point.y, 0)
+                            + ((new Vector3(reflected.x, reflected.y, 0) * velocity * Time.deltaTime));
+                    }
                 }
                 else
                 {
+                    if (hit.collider.transform.GetComponent<Battery>() != null)
+                        hit.collider.transform.GetComponent<Battery>().Hit(damage);
+
                     transform.position = hit.point;
                     hitWall = true;
                     foreach(var go in disableOnHit)
