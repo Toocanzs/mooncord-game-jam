@@ -6,13 +6,11 @@ using UnityEngine;
 public class BasicEnemy : MonoBehaviour
 {
     private StateMachine stateMachine;
-    new private Rigidbody2D rigidbody;
-    [SerializeField]
-    private float wanderRange = 3f;
-    [SerializeField]
-    private float wanderSpeed = 3f;
-    [SerializeField]
-    private float wanderResetTime = 3f;
+    [HideInInspector]
+    new public Rigidbody2D rigidbody;
+    public float wanderRange = 3f;
+    public float wanderSpeed = 3f;
+    public float wanderResetTime = 3f;
     void Start()
     {
         stateMachine = GetComponent<StateMachine>();
@@ -23,7 +21,7 @@ public class BasicEnemy : MonoBehaviour
     {
         var states = new Dictionary<Type, BaseState>
         {
-            { typeof(WanderState), new WanderState(gameObject, rigidbody, wanderRange, wanderSpeed, wanderResetTime)},
+            { typeof(WanderState), new WanderState(this)},
         };
         stateMachine.SetStates(states);
     }

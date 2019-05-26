@@ -7,7 +7,6 @@ public class PlayerVelocity : MonoBehaviour
 {
     [HideInInspector]
     public float2 velocity;
-    public LayerMask layerMask;
 
     new private Rigidbody2D rigidbody;
     void Start()
@@ -17,7 +16,7 @@ public class PlayerVelocity : MonoBehaviour
 
     void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, math.normalize(velocity), math.length(velocity) * Time.deltaTime, layerMask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, math.normalize(velocity), math.length(velocity) * Time.deltaTime, gameObject.layer);
         if(hit.transform != null)
         {
             velocity = 0;

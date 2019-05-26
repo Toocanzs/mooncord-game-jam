@@ -5,12 +5,13 @@ using UnityEngine;
 public class DoorTrigger : MonoBehaviour
 {
     [SerializeField]
-    private GameObject door;
+    private GameObject[] onTriggerObjects;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<Player>() != null)
         {
-            door.SetActive(true);
+            foreach(var obj in onTriggerObjects)
+                obj.SetActive(true);
             Destroy(gameObject);
         }
     }

@@ -23,7 +23,6 @@ public class StateMachine : MonoBehaviour
         if (CurrentState == null)
         {
             CurrentState = states.Values.First();
-            Debug.Log(CurrentState);
         }
 
         var nextState = CurrentState.Tick();

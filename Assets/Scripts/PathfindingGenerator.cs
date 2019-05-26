@@ -88,6 +88,8 @@ namespace ThetaStar
 
         private Dictionary<Vector3Int, Vertex> positionToVertex = new Dictionary<Vector3Int, Vertex>();
 
+        List<Vertex> floorVertices = new List<Vertex>();
+
         void Start()
         {
             if(Instance == null)
@@ -116,8 +118,13 @@ namespace ThetaStar
 
         public List<Vector3> FindPath(float3 startpos, float3 endpos)
         {
-            positionToVertex.TryGetValue(new Vector3Int((int)startpos.x, (int)startpos.y, 0), out Vertex start);
-            positionToVertex.TryGetValue(new Vector3Int((int)endpos.x, (int)endpos.y, 0), out Vertex end);
+            positionToVertex.TryGetValue(new Vector3Int(Mathf.FloorToInt(startpos.x), Mathf.FloorToInt(startpos.y), 0), out Vertex start);
+            positionToVertex.TryGetValue(new Vector3Int(Mathf.FloorToInt(endpos.x), Mathf.FloorToInt(endpos.y), 0), out Vertex end);
+            if(end == null || end.colliderType != ColliderType.None)
+            {
+                end = FindNearestFloorTile(endpos);
+                endpos = (Vector3)end.position;
+            }
 
             PriorityQueue<Vertex> open = new PriorityQueue<Vertex>();
             List<Vertex> closed = new List<Vertex>();
@@ -203,6 +210,22 @@ namespace ThetaStar
             return GetPath(parent, lowestHVertex, start, startpos, endpos, false);
         }
 
+        private Vertex FindNearestFloorTile(float3 endpos)
+        {
+            float minDist = float.MaxValue;
+            Vertex minVertex = null;
+            foreach(var vertex in floorVertices)
+            {
+                float d = math.distancesq((Vector3)vertex.position, endpos);
+                if (d < minDist)
+                {
+                    minDist = d;
+                    minVertex = vertex;
+                }
+            }
+            return minVertex;
+        }
+
         private List<Vector3> GetPath(Dictionary<Vertex, Vertex> parent, Vertex end, Vertex start, Vector3 startPos, Vector3 endPos, bool validPath)
         {
             List<Vector3> path = new List<Vector3>();
@@ -267,7 +290,7 @@ namespace ThetaStar
 
         private void CreateVertices()
         {
-            //create verticies pass
+            //create vertices pass
             for (int y = 0; y < tilemapSize.y; y++)
             {
                 for (int x = 0; x < tilemapSize.x; x++)
@@ -279,6 +302,10 @@ namespace ThetaStar
                     {
                         Vertex vertex = new Vertex(pos, tile.Item2.Value);
                         positionToVertex[pos] = vertex;
+                        if(tile.Item2.Value == ColliderType.None)
+                        {
+                            floorVertices.Add(vertex);
+                        }
                     }
                 }
             }

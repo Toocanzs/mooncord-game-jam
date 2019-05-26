@@ -25,9 +25,22 @@ public class Arrow : MonoBehaviour
             }
             else
             {
-                transform.position = hit.point;
-                hitWall = true;
-                Destroy(this);
+                if (hit.transform.GetComponent<ReflectionShield>() != null)
+                {
+                    var reflected = Vector2.Reflect(transform.right, hit.normal);
+                    var angle = Vector2.Angle(Vector2.right, reflected) *  Mathf.Rad2Deg;
+                    transform.right = reflected;
+
+                    transform.position = hit.transform.position 
+                        + (Vector3.Normalize(transform.position - hit.transform.position) * hit.collider.bounds.size.x / 2f) 
+                        + new Vector3(reflected.x, reflected.y, 0) * velocity * Time.deltaTime;
+                }
+                else
+                {
+                    transform.position = hit.point;
+                    hitWall = true;
+                    Destroy(this);
+                }
             }
         }
     }
