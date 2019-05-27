@@ -44,8 +44,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shotNum: 10
-  bullet: {fileID: 5609806829840287773, guid: bf4b8d85e87c3dc49afac3cc91412117, type: 3}
+  dodgeableBullet: {fileID: 5609806829840287773, guid: bf4b8d85e87c3dc49afac3cc91412117,
+    type: 3}
+  undodgeableBullet: {fileID: 7998146958253310850, guid: 7bfa8dbd81eac754ea64df8149fe8299,
+    type: 3}
   audioClip: {fileID: 8300000, guid: 2483ed9f18bde4943a44f650e5234525, type: 3}
   angle: 90
   totalShotTime: 0.6
   totalTrauma: 0.5
+  undodgeableChange: 0
