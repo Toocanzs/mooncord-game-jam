@@ -20,6 +20,8 @@ public class Arrow : MonoBehaviour
     [SerializeField]
     private bool parentOnHit = true;
     [SerializeField]
+    private bool destroyGameObject = false;
+    [SerializeField]
     private AudioClip onHitClip;
     [SerializeField]
     private GameObject[] disableOnHit;
@@ -77,8 +79,13 @@ public class Arrow : MonoBehaviour
                         transform.parent = hit.collider.transform;
                     if(onHitClip != null)
                         AudioPlayer.Instance.PlayOneShot(onHitClip, 0.2f);
-                    if(destroyOnHit)
-                        Destroy(this);
+                    if (destroyOnHit)
+                    {
+                        if (destroyGameObject)
+                            Destroy(gameObject);
+                        else
+                            Destroy(this);
+                    }
                 }
             }
         }

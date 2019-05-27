@@ -3,7 +3,6 @@
 	Properties
 	{
 		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
-		[HDR]
 		_Color("Tint", Color) = (1,1,1,1)
 		[Toggle]_IsWall("Is Wall", int) = 0
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 0

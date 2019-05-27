@@ -44,6 +44,7 @@ public class LaserShot : MonoBehaviour
             {
                 AudioPlayer.Instance.PlayOneShot(shot);
                 playedSound = true;
+                CameraShakeData.Instance.AddTrauma(0.2f);
             }
             colliderObject.SetActive(true);
         }
