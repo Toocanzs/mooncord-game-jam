@@ -10,9 +10,8 @@ public class BatteryManager : MonoBehaviour
     [SerializeField]
     private GameObject[] batteries;
 
-    float time = 0f;
-    [SerializeField]
-    float shieldRespawnTime = 60f;
+    public float time = 0f;
+    public float shieldRespawnTime = 60f;
     bool shieldsActive = false;
 
     [SerializeField]
@@ -25,6 +24,8 @@ public class BatteryManager : MonoBehaviour
     [SerializeField]
     private float allAtOnceTimeLimit = 10f;
     private float allAtOnceTime = 0f;
+    [SerializeField]
+    private GameObject shieldBar;
 
     void Start()
     {
@@ -70,6 +71,7 @@ public class BatteryManager : MonoBehaviour
             if(numBatteries <= 0)
             {
                 bossShield.SetActive(false);
+                shieldBar.SetActive(true);
                 shieldsActive = false;
                 time = 0;
             }
@@ -98,7 +100,8 @@ public class BatteryManager : MonoBehaviour
         time = 0f;
         shieldsActive = true;
         bossShield.SetActive(true);
-        foreach(var battery in batteries)
+        shieldBar.SetActive(false);
+        foreach (var battery in batteries)
         {
             battery.GetComponent<Battery>().maxHP = GetBatteryHp();
             battery.SetActive(true);

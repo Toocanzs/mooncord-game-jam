@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6795244643157021920}
   - component: {fileID: 3571926284337819136}
   - component: {fileID: 6266409200492852460}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: projectile base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,6 +106,7 @@ MonoBehaviour:
   destroyGameObject: 1
   onHitClip: {fileID: 0}
   disableOnHit: []
+  reflectedMaterial: {fileID: 0}
 --- !u!58 &3571926284337819136
 CircleCollider2D:
   m_ObjectHideFlags: 0
