@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-
+[RequireComponent(typeof(AudioSource))]
 public class LaserShot : MonoBehaviour
 {
     [SerializeField]
@@ -22,13 +22,16 @@ public class LaserShot : MonoBehaviour
     private float maxTime = 1f;
     [SerializeField]
     private float laserWidth = 4f;
+    public float trauma = 0.2f;
 
     private bool playedSound = false;
+    private AudioSource audioSource;
     void OnEnable()
     {
         colliderObject.SetActive(false);
         time = 0f;
         playedSound = false;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -42,9 +45,9 @@ public class LaserShot : MonoBehaviour
         {
             if(!playedSound)
             {
-                AudioPlayer.Instance.PlayOneShot(shot);
+                audioSource.PlayOneShot(shot);
                 playedSound = true;
-                CameraShakeData.Instance.AddTrauma(0.2f);
+                CameraShakeData.Instance.AddTrauma(trauma);
             }
             colliderObject.SetActive(true);
         }
