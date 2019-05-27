@@ -96,7 +96,7 @@ MonoBehaviour:
   velocity: 15
   layerMask:
     serializedVersion: 2
-    m_Bits: 4352
+    m_Bits: 4096
   reflectable: 0
   destroyOnHit: 1
   destroyTimeout: 1
