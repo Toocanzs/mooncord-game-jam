@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5609806829840287747}
   - component: {fileID: 5609806829840287772}
   - component: {fileID: 6795244643157021920}
+  - component: {fileID: 3571926284337819136}
+  - component: {fileID: 6266409200492852460}
   m_Layer: 0
   m_Name: projectile base
   m_TagString: Untagged
@@ -104,3 +106,32 @@ MonoBehaviour:
   destroyGameObject: 1
   onHitClip: {fileID: 0}
   disableOnHit: []
+--- !u!58 &3571926284337819136
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5609806829840287773}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.25
+--- !u!114 &6266409200492852460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5609806829840287773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b365f2973f33246a58e186fbc59cac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dodgeable: 1

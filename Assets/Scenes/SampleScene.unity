@@ -1134,7 +1134,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 533277993}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.76, y: -0.59, z: 0}
+  m_LocalPosition: {x: 1.22, y: -0.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 519420032}
@@ -10277,6 +10277,7 @@ GameObject:
   - component: {fileID: 1605275295}
   - component: {fileID: 1605275296}
   - component: {fileID: 1605275297}
+  - component: {fileID: 1605275298}
   m_Layer: 13
   m_Name: boss
   m_TagString: Untagged
@@ -10647,6 +10648,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1605275298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605275287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b365f2973f33246a58e186fbc59cac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dodgeable: 0
 --- !u!1 &1834535590
 GameObject:
   m_ObjectHideFlags: 0
@@ -10814,6 +10828,7 @@ GameObject:
   - component: {fileID: 1920981487}
   - component: {fileID: 1920981486}
   - component: {fileID: 1920981489}
+  - component: {fileID: 1920981490}
   m_Layer: 13
   m_Name: enemy
   m_TagString: Untagged
@@ -10962,6 +10977,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b51ad9036f3ce46a1b100e8ce006fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1920981490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1920981482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b365f2973f33246a58e186fbc59cac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dodgeable: 0
 --- !u!1 &1954921410
 GameObject:
   m_ObjectHideFlags: 0
