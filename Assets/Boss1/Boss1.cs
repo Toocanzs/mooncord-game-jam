@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 [RequireComponent(typeof(Rigidbody2D), typeof(StateMachine), typeof(AudioSource))]
 public class Boss1 : MonoBehaviour
 {
@@ -90,6 +92,10 @@ public class Boss1 : MonoBehaviour
             phase++;
             nextHpTick -= (maxHp / (totalPhases + 1));
         }
+        if(currentHp <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
 
     public void UpdatePhase()
@@ -107,7 +113,6 @@ public class Boss1 : MonoBehaviour
         go.GetComponent<Chain>().parent = transform;
         yield return new WaitForSeconds(1f);
         FireRandomQuickAttack();
-        //Probably fire more stuff along the way.
     }
 
     private float FireChain()
