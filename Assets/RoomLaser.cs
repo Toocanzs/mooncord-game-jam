@@ -34,7 +34,6 @@ public class RoomLaser : MonoBehaviour
     {
         vertTime = 0f;
         horizontalTime = 0f;
-        
     }
     void Update()
     {
@@ -63,6 +62,31 @@ public class RoomLaser : MonoBehaviour
         }
     }
 
+    private IEnumerator HorizontalSplit()
+    {
+        for (int i = 0; i < horizontalTransforms.Count; i++)
+        {
+            if(i%2 == 0)
+                Fire(horizontalTransforms[i/2]);
+            else
+                Fire(horizontalTransforms[horizontalTransforms.Count - 1 - (i/2)]);
+            yield return new WaitForSeconds(timeBetweenShots);
+        }
+    }
+
+    private IEnumerator VerticalSplit()
+    {
+        for (int i = 0; i < verticalTransforms.Count; i++)
+        {
+            if (i % 2 == 0)
+                Fire(verticalTransforms[i / 2]);
+            else
+                Fire(verticalTransforms[verticalTransforms.Count - 1 - (i / 2)]);
+            yield return new WaitForSeconds(timeBetweenShots*2f);
+        }
+    }
+
+
     private IEnumerator Vertical()
     {
         for (int i = 0; i < verticalTransforms.Count; i++)
@@ -80,6 +104,17 @@ public class RoomLaser : MonoBehaviour
     public void FireVertical()
     {
         StartCoroutine(Vertical());
+    }
+
+    public void FireHorizontalSplit()
+    {
+        StartCoroutine(HorizontalSplit());
+        
+    }
+
+    public void FireVerticalSplit()
+    {
+        StartCoroutine(VerticalSplit());
     }
 
     private void Fire(Transform point)

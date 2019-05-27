@@ -36,7 +36,7 @@ public class ChaseState : BaseState
         if (time > nextAttackTime)
         {
             time = 0f;
-            nextAttackTime = boss.GetTimeBetweenAttacks() + boss.ChooseAttack();
+            nextAttackTime = boss.GetTimeBetweenAttacks() + boss.ChooseAttack();// * math.smoothstep(1f,0.7f,boss.phase/4f);
         }
         time += Time.deltaTime;
         return GetType();

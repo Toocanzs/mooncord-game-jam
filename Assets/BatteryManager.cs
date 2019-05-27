@@ -21,7 +21,7 @@ public class BatteryManager : MonoBehaviour
     private int numBatteries = 0;
     private int maxNumBatteries = 0;
 
-    private bool allAtOnce = false;
+    public bool allAtOnce = false;
     [SerializeField]
     private float allAtOnceTimeLimit = 10f;
     private float allAtOnceTime = 0f;
@@ -46,6 +46,17 @@ public class BatteryManager : MonoBehaviour
 
     void Update()
     {
+        if(boss.phase > 3)
+        {
+            allAtOnce = true;
+            if (allAtOnce)
+            {
+                foreach (var battery in batteries)
+                {
+                    battery.GetComponent<Battery>().batteryProgressBarSpriteRenderer.material.SetColor("_Color", Color.red);
+                }
+            }
+        }
         if(!shieldsActive)
         {
             time += Time.deltaTime;
@@ -91,10 +102,6 @@ public class BatteryManager : MonoBehaviour
         {
             battery.GetComponent<Battery>().maxHP = GetBatteryHp();
             battery.SetActive(true);
-            if (allAtOnce)
-            {
-                battery.GetComponent<Battery>().batteryProgressBarSpriteRenderer.material.SetColor("_Color", Color.red);
-            }
         }
         numBatteries = batteries.Length;
         maxNumBatteries = batteries.Length;
@@ -107,13 +114,13 @@ public class BatteryManager : MonoBehaviour
             case 0:
                 return 10;
             case 1:
-                return 20;
+                return 10;
             case 2:
-                return 30;
+                return 20;
             case 3:
-                return 40;
+                return 20;
             default:
-                return 40;
+                return 30;
         }
     }
 }

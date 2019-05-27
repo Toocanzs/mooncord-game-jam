@@ -30,6 +30,7 @@ public class SnapState : BaseState
         {
             boss.audioSource.PlayOneShot(boss.scanSnapClip);
             startRotation = transform.rotation;
+            boss.hpBarObject.SetActive(true);
             boss.hitSnapState = true;
         }
     }

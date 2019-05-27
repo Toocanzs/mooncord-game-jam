@@ -81,6 +81,10 @@ public class Arrow : MonoBehaviour
                 {
                     if (hit.collider.transform.GetComponent<Battery>() != null)
                         hit.collider.transform.GetComponent<Battery>().Hit(damage);
+                    if (hit.collider.transform.GetComponent<Boss1>() != null)
+                    {
+                        hit.collider.transform.GetComponent<Boss1>().Hit(damage);
+                    }
 
                     transform.position = hit.point;
                     hitWall = true;

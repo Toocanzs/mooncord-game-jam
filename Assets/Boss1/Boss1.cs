@@ -48,6 +48,16 @@ public class Boss1 : MonoBehaviour
     [SerializeField]
     private RoomLaser roomLaser;
 
+    public float currentHp;
+    [SerializeField]
+    public float maxHp = 600;
+    public GameObject hpBarObject;
+
+    private int totalPhases = 6;
+    private float nextHpTick;
+    [SerializeField]
+    private AudioClip[] phaseChanges;
+
     void Start()
     {
         stateMachine = GetComponent<StateMachine>();
@@ -61,16 +71,24 @@ public class Boss1 : MonoBehaviour
             { typeof(ChaseState), new ChaseState(this)},
         };
         stateMachine.SetStates(states);
+        currentHp = maxHp;
+        nextHpTick = maxHp - (maxHp / (totalPhases+1));
     }
 
     void Update()
     {
-        if(Input.GetButtonDown("Fire2") && !hitSnapState)
+        if (Input.GetButtonDown("Fire2") && !hitSnapState)
         {
             stateMachine.SwitchToNextState(typeof(SnapState));
             var snapstate = ((SnapState)states[typeof(SnapState)]);
             snapstate.time = snapstate.totalWaitTime - 1f;
             Destroy(scanAudioSource.gameObject);
+        }
+        if(currentHp < nextHpTick)
+        {
+            AudioPlayer.Instance.PlayOneShot(phaseChanges[math.min(phase, totalPhases)]);
+            phase++;
+            nextHpTick -= (maxHp / (totalPhases + 1));
         }
     }
 
@@ -107,6 +125,11 @@ public class Boss1 : MonoBehaviour
         return 0f;
     }
 
+    public void Hit(float damage)
+    {
+        currentHp -= damage;
+    }
+
     private float FireSmg()
     {
         var go = Instantiate(smgPrefab, transform.position, Quaternion.identity, null);
@@ -132,17 +155,18 @@ public class Boss1 : MonoBehaviour
             float2 dir = ((float3)(Player.Instance.transform.position - transform.position)).xy;
             go.transform.right = new Vector3(dir.x, dir.y, 0);
             if (i != 0)
-                go.transform.rotation = Quaternion.Euler(go.transform.rotation.eulerAngles + new Vector3(0,0,UnityEngine.Random.Range(-45f, 45f)));
+                go.transform.rotation = Quaternion.Euler(go.transform.rotation.eulerAngles + new Vector3(0, 0, UnityEngine.Random.Range(-45f, 45f)));
             go.GetComponent<LaserShot>().targetRotation = go.transform.rotation;
+            go.GetComponent<LaserShot>().trauma = 0.05f;
             yield return new WaitForSeconds(0.05f);
         }
     }
 
     private float FireLasers()
     {
-        int x = UnityEngine.Random.Range(4, 8 + phase*3);
+        int x = UnityEngine.Random.Range(4 + (phase / 2), 8 + (phase/4));
         StartCoroutine(Lasers(x));
-        return x*0.2f;
+        return x * 0.2f;
     }
 
     IEnumerator Wall()
@@ -197,15 +221,13 @@ public class Boss1 : MonoBehaviour
 
     private float FireGravity()
     {
-        //influence
-        //Fire other attacks probably
         StartCoroutine(Gravity());
         return 4f;
     }
 
     public float FireRoomLaser()
     {
-        switch(UnityEngine.Random.Range(0,2 + (phase > 2 ? 1 : 0)))
+        switch (UnityEngine.Random.Range(0, 2 + math.max(phase - 2, 0)))
         {
             case 0:
                 roomLaser.FireHorizontal();
@@ -217,16 +239,23 @@ public class Boss1 : MonoBehaviour
                 roomLaser.FireHorizontal();
                 roomLaser.FireVertical();
                 break;
+            case 3:
+                roomLaser.FireHorizontalSplit();
+                break;
+            case 4:
+                roomLaser.FireVerticalSplit();
+                break;
             default:
-                roomLaser.FireHorizontal();
+                roomLaser.FireVerticalSplit();
+                roomLaser.FireHorizontalSplit();
                 break;
         }
-        return 1f;
+        return 4f;
     }
 
     public float ChooseAttack()
     {
-        switch (UnityEngine.Random.Range(0, 8))
+        switch (UnityEngine.Random.Range(0, 7 + (phase > 2 ? 1 : 0)))
         {
             case 0:
                 return FireLasers();
@@ -237,9 +266,9 @@ public class Boss1 : MonoBehaviour
             case 3:
                 return FireShotgun();
             case 4:
-                return FireExplode();
-            case 5:
                 return FireChain();
+            case 5:
+                return FireExplode();
             case 6:
                 return FireGravity();
             case 7:
@@ -252,18 +281,18 @@ public class Boss1 : MonoBehaviour
 
     public float GetTimeBetweenAttacks()
     {
-        switch(phase)
+        switch (phase)
         {
             case 0:
                 return 3f;
             case 1:
-                return 2.5f;
+                return 3f;
             case 2:
-                return 2f;
+                return 2.5f;
             case 3:
-                return 1.5f;
+                return 2f;
             default:
-                return 1f;
+                return 2f;
         }
     }
 }

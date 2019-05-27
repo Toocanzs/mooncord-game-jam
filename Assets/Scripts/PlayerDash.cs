@@ -12,6 +12,9 @@ public class PlayerDash : MonoBehaviour
     float dashSpeed = 5f;
     [SerializeField]
     private AudioClip dashSound;
+    [SerializeField]
+    private float dodgeCooldown = 0.3f;
+    private float dodgeCooldownTime = 0f;
 
     private AudioSource audioSource;
 
@@ -32,6 +35,7 @@ public class PlayerDash : MonoBehaviour
         playerVelocity = GetComponent<PlayerVelocity>();
         audioSource = GetComponent<AudioSource>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        dodgeCooldownTime = dodgeCooldown;
     }
     void OnDisable()
     {
@@ -45,10 +49,11 @@ public class PlayerDash : MonoBehaviour
         {
             dashDirection = math.normalize(input);
         }
-        if (Input.GetButtonDown("Jump") && !dashing)
+        if (Input.GetButtonDown("Jump") && !dashing && dodgeCooldownTime > dodgeCooldown)
         {
             AudioPlayer.Instance.PlayOneShot(dashSound, 0.5f);
             dashing = true;
+            dodgeCooldownTime = 0f;
             playerMovement.enabled = false;
             dashTime = 0f;
             RaycastHit2D hit = Physics2D.CircleCast(transform.position, collider.radius, dashDirection, maxDashDistance, PlayerLayerMask.Instance.layerMask);
@@ -88,5 +93,6 @@ public class PlayerDash : MonoBehaviour
         {
             spriteRenderer.sharedMaterial.SetInt("dashing", 0);
         }
+        dodgeCooldownTime += Time.deltaTime;
     }
 }
