@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -9,9 +10,13 @@ public class Player : MonoBehaviour
 
     public static event Action OnDeath = delegate { };
     private bool dead = false;
+    [SerializeField]
+    private Transform bossSpawnPoint;
 
     [SerializeField]
     private GameObject deathScreen;
+    [SerializeField]
+    private GameObject enemeyParent;
     void Start()
     {
         if(Instance == null)
@@ -22,10 +27,20 @@ public class Player : MonoBehaviour
         {
             Destroy(this);
         }
+        if(PlayerPrefs.GetInt("spawnAtBoss") != 0)
+        {
+            transform.position = bossSpawnPoint.position;
+            Destroy(enemeyParent);
+        }
     }
 
     void Update()
     {
+        if(Input.GetButtonDown("Fire3"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        }
+
         if(dead)
         {
             var playerWeapon = GetComponent<PlayerWeapon>().enabled = false; ;

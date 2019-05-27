@@ -12,6 +12,7 @@ public class DoorTrigger : MonoBehaviour
         {
             foreach(var obj in onTriggerObjects)
                 obj.SetActive(true);
+            PlayerPrefs.SetInt("spawnAtBoss", 1);
             Destroy(gameObject);
         }
     }
