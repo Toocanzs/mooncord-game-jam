@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using System;
-
+[RequireComponent(typeof(SpriteRenderer))]
 public class Arrow : MonoBehaviour
 {
     [SerializeField]
@@ -26,6 +26,10 @@ public class Arrow : MonoBehaviour
     [SerializeField]
     private GameObject[] disableOnHit;
 
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private Material reflectedMaterial;
+
     float damage = 1f;
 
     public event Action<RaycastHit2D> OnHit = delegate { };
@@ -34,6 +38,7 @@ public class Arrow : MonoBehaviour
     {
         if(destroyTimeout)
             Destroy(gameObject, 6f);
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -61,6 +66,15 @@ public class Arrow : MonoBehaviour
 
                         transform.position = new Vector3(hit.point.x, hit.point.y, 0)
                             + ((new Vector3(reflected.x, reflected.y, 0) * velocity * Time.deltaTime));
+                        if(GetComponent<DamagePlayerOnTouch>() == null)
+                        {
+                            spriteRenderer.material = reflectedMaterial;
+                            gameObject.AddComponent<DamagePlayerOnTouch>();
+                            var col = gameObject.AddComponent<BoxCollider2D>();
+                            col.isTrigger = true;
+                            col.size = new Vector2(0.8f, 0.2f);
+                            gameObject.layer = LayerMask.NameToLayer("Enemy Projectile");
+                        }
                     }
                 }
                 else

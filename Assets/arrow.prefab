@@ -101,5 +101,7 @@ MonoBehaviour:
   destroyOnHit: 1
   destroyTimeout: 1
   parentOnHit: 1
+  destroyGameObject: 0
   onHitClip: {fileID: 8300000, guid: b06d391bf4b97c04aae0adc58f7b48d5, type: 3}
   disableOnHit: []
+  reflectedMaterial: {fileID: 2100000, guid: 756965764a9acbe42828241f5219d038, type: 2}
