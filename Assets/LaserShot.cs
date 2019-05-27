@@ -24,6 +24,8 @@ public class LaserShot : MonoBehaviour
     private float laserWidth = 4f;
     public float trauma = 0.2f;
 
+    public Quaternion targetRotation;
+
     private bool playedSound = false;
     private AudioSource audioSource;
     void OnEnable()
@@ -60,5 +62,9 @@ public class LaserShot : MonoBehaviour
             float dist = math.distance(((float3)transform.position).xy, hit.point);
             transform.localScale = new Vector3(dist*2, y* laserWidth, 1);
         }
+    }
+    void LateUpdate()
+    {
+        transform.rotation = targetRotation;
     }
 }

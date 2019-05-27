@@ -20,6 +20,8 @@ public class SmgBurst : MonoBehaviour
     public float undodgeableChange = 0f;
     private int undodgeableStart = -1;
     private int undodgeableEnd = -1;
+
+    public Transform parent;
     void OnEnable()
     {
         shot = 0;
@@ -72,7 +74,10 @@ public class SmgBurst : MonoBehaviour
         }
         time += Time.deltaTime;
     }
-
+    void LateUpdate()
+    {
+        transform.position = parent.position;
+    }
     private void Shoot(int i)
     {
         if (i >= undodgeableStart && i < undodgeableEnd)

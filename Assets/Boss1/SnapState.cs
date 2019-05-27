@@ -51,6 +51,7 @@ public class SnapState : BaseState
         if(time > totalWaitTime)
         {
             time = 0f;
+            boss.audioLoopSource.Play();
             return typeof(ChaseState);
         }
         return GetType();

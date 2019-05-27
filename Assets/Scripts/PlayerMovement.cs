@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 1f;
     private PlayerVelocity playerVelocity;
+    public Transform influence;
     void Start()
     {
         playerVelocity = GetComponent<PlayerVelocity>();
@@ -16,14 +17,12 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         float2 input = new float2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        if (math.dot(input, input) != 0f)
+        input = math.normalizesafe(input, float2.zero);
+        playerVelocity.velocity = input * moveSpeed;
+        if (influence != null)
         {
-            input = math.normalize(input);
-            playerVelocity.velocity = input * moveSpeed;
-        }
-        else
-        {
-            playerVelocity.velocity = Vector2.zero;
+            float2 influenceDir = math.normalize(((float3)influence.position).xy - ((float3)transform.position).xy);
+            playerVelocity.velocity += influenceDir * moveSpeed * 0.7f;
         }
     }
 }

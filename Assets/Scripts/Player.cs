@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+[DefaultExecutionOrder(-500000)]
 public class Player : MonoBehaviour
 {
     public static Player Instance;

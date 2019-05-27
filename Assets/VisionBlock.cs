@@ -9,8 +9,8 @@ public class VisionBlock : MonoBehaviour
     private float time = 0f;
     [SerializeField]
     private float maxTime = 0f;
-    [SerializeField]
-    private float maxHeight = 5f;
+
+    public float maxHeight = 5f;
 
     private Vector3 startSize;
 

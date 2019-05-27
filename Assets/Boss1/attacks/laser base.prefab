@@ -247,6 +247,8 @@ MonoBehaviour:
   colliderOnThreshold: 0.8
   maxTime: 2
   laserWidth: 6
+  trauma: 0.12
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!82 &47363471
 AudioSource:
   m_ObjectHideFlags: 0

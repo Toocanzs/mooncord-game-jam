@@ -6,8 +6,7 @@ using System;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Arrow : MonoBehaviour
 {
-    [SerializeField]
-    private float velocity = 5f;
+    public float velocity = 5f;
     private bool hitWall = false;
     [SerializeField]
     private LayerMask layerMask;
