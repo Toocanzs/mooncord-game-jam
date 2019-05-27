@@ -147,15 +147,14 @@ public class Boss1 : MonoBehaviour
         return 0f;
     }
 
-    IEnumerator Lasers(int num)
+    IEnumerator Lasers(int num, List<float> rand)
     {
         for (int i = 0; i < num; i++)
         {
             var go = Instantiate(laserPrefab, transform.position, Quaternion.identity, transform);
             float2 dir = ((float3)(Player.Instance.transform.position - transform.position)).xy;
             go.transform.right = new Vector3(dir.x, dir.y, 0);
-            if (i != 0)
-                go.transform.rotation = Quaternion.Euler(go.transform.rotation.eulerAngles + new Vector3(0, 0, UnityEngine.Random.Range(-45f, 45f)));
+            go.transform.rotation = Quaternion.Euler(go.transform.rotation.eulerAngles + new Vector3(0, 0, rand[i]));
             go.GetComponent<LaserShot>().targetRotation = go.transform.rotation;
             go.GetComponent<LaserShot>().trauma = 0.05f;
             yield return new WaitForSeconds(0.05f);
@@ -165,7 +164,18 @@ public class Boss1 : MonoBehaviour
     private float FireLasers()
     {
         int x = UnityEngine.Random.Range(4 + (phase / 2), 8 + (phase/4));
-        StartCoroutine(Lasers(x));
+        List<float> rand = new List<float>();
+        for(int i = 0; i < x; i++)
+        {
+            if (i == 0)
+                rand.Add(0f);
+            else
+                rand.Add(UnityEngine.Random.Range(-45f, 45f));
+        }
+        rand.Sort();
+        if (UnityEngine.Random.Range(0f, 1f) > 0.5f)
+            rand.Reverse();
+        StartCoroutine(Lasers(x, rand));
         return x * 0.2f;
     }
 
