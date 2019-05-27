@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
         }
         if(PlayerPrefs.GetInt("spawnAtBoss") != 0)
         {
-            transform.position = bossSpawnPoint.position;
+            transform.position = bossSpawnPoint.position;//REMOVE THIS
             Destroy(enemeyParent);
         }
     }

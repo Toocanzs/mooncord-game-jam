@@ -85,6 +85,10 @@ public class Arrow : MonoBehaviour
                     {
                         hit.collider.transform.GetComponent<Boss1>().Hit(damage);
                     }
+                    if (hit.collider.transform.GetComponent<BasicEnemy>() != null)
+                    {
+                        Destroy(hit.collider.gameObject);
+                    }
 
                     transform.position = hit.point;
                     hitWall = true;
