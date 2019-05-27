@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(StateMachine), typeof(AudioSource))]
 public class Boss1 : MonoBehaviour
@@ -28,6 +29,8 @@ public class Boss1 : MonoBehaviour
 
     [SerializeField]
     private GameObject chainPrefab;
+    [SerializeField]
+    private AudioClip chainAlertSound;
 
     void Start()
     {
@@ -60,10 +63,19 @@ public class Boss1 : MonoBehaviour
 
     }
 
+    IEnumerator Chain()
+    {
+        AudioPlayer.Instance.PlayOneShot(chainAlertSound);
+        yield return new WaitForSeconds(2.2f);
+        var go = Instantiate(chainPrefab, transform.position, Quaternion.identity, null);
+        float2 dir = ((float3)(Player.Instance.transform.position - transform.position)).xy;
+        go.transform.right = new Vector3(dir.x, dir.y, 0);
+        go.GetComponent<Chain>().parent = transform;
+    }
+
     private float FireChain()
     {
-        var go = Instantiate(chainPrefab, transform.position, transform.rotation);
-        go.GetComponent<ChainSpawner>().boss = gameObject;
+        StartCoroutine(Chain());
         return 3f;
     }
 
