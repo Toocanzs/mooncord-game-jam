@@ -34,24 +34,11 @@ public class RoomLaser : MonoBehaviour
     {
         vertTime = 0f;
         horizontalTime = 0f;
+        
     }
     void Update()
     {
-        if(vertFired < verticalTransforms.Count && vertTime > timeBetweenShots)
-        {
-            Fire(verticalTransforms[vertFired]);
-            vertTime = 0f;
-            vertFired++;
-        }
 
-        if (horizontalFired < horizontalTransforms.Count && horizontalTime > timeBetweenShots)
-        {
-            Fire(horizontalTransforms[horizontalFired]);
-            horizontalTime = 0f;
-            horizontalFired++;
-        }
-        horizontalTime += Time.deltaTime;
-        vertTime += Time.deltaTime;
     }
 
     void OnDrawGizmosSelected()
@@ -67,14 +54,32 @@ public class RoomLaser : MonoBehaviour
         }
     }
 
+    private IEnumerator Horizontal()
+    {
+        for(int i = 0; i < horizontalTransforms.Count; i++)
+        {
+            Fire(horizontalTransforms[i]);
+            yield return new WaitForSeconds(timeBetweenShots);
+        }
+    }
+
+    private IEnumerator Vertical()
+    {
+        for (int i = 0; i < verticalTransforms.Count; i++)
+        {
+            Fire(verticalTransforms[i]);
+            yield return new WaitForSeconds(timeBetweenShots);
+        }
+    }
+
     public void FireHorizontal()
     {
-        horizontalFired = 0;
+        StartCoroutine(Horizontal());
     }
 
     public void FireVertical()
     {
-        vertFired = 0;
+        StartCoroutine(Vertical());
     }
 
     private void Fire(Transform point)

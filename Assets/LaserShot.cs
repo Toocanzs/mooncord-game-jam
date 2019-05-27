@@ -24,7 +24,7 @@ public class LaserShot : MonoBehaviour
     private float laserWidth = 4f;
     public float trauma = 0.2f;
 
-    public Quaternion targetRotation;
+    public Quaternion? targetRotation = null;
 
     private bool playedSound = false;
     private AudioSource audioSource;
@@ -65,6 +65,7 @@ public class LaserShot : MonoBehaviour
     }
     void LateUpdate()
     {
-        transform.rotation = targetRotation;
+        if(targetRotation != null)
+            transform.rotation = targetRotation.Value;
     }
 }

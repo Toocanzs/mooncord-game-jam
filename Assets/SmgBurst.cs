@@ -76,7 +76,8 @@ public class SmgBurst : MonoBehaviour
     }
     void LateUpdate()
     {
-        transform.position = parent.position;
+        if(parent != null)
+            transform.position = parent.position;
     }
     private void Shoot(int i)
     {

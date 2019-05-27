@@ -15,12 +15,12 @@ PrefabInstance:
     - target: {fileID: 5979868293110074023, guid: ee216c7d2f49d37478aab23a4a913b07,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.158567
+      value: -18.190313
       objectReference: {fileID: 0}
     - target: {fileID: 5979868293110074023, guid: ee216c7d2f49d37478aab23a4a913b07,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 24.585018
+      value: 20.312025
       objectReference: {fileID: 0}
     - target: {fileID: 5979868293110074023, guid: ee216c7d2f49d37478aab23a4a913b07,
         type: 3}
@@ -69,6 +69,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5979868293110074022, guid: ee216c7d2f49d37478aab23a4a913b07,
         type: 3}
+      propertyPath: shotNum
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5979868293110074022, guid: ee216c7d2f49d37478aab23a4a913b07,
+        type: 3}
       propertyPath: audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 250c8d9a072c317429c77ab5a0638577, type: 3}
@@ -81,11 +86,6 @@ PrefabInstance:
         type: 3}
       propertyPath: totalTrauma
       value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5979868293110074022, guid: ee216c7d2f49d37478aab23a4a913b07,
-        type: 3}
-      propertyPath: undodgeableChange
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee216c7d2f49d37478aab23a4a913b07, type: 3}

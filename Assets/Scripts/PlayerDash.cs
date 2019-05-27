@@ -24,12 +24,14 @@ public class PlayerDash : MonoBehaviour
     new private CircleCollider2D collider;
     float2 dashDirection = 0;
     PlayerVelocity playerVelocity;
+    SpriteRenderer spriteRenderer;
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
         collider = GetComponent<CircleCollider2D>();
         playerVelocity = GetComponent<PlayerVelocity>();
         audioSource = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     void OnDisable()
     {
@@ -62,6 +64,7 @@ public class PlayerDash : MonoBehaviour
         }
         if(dashing)
         {
+            spriteRenderer.sharedMaterial.SetInt("dashing", 1);
             playerVelocity.velocity = 0;
             float dashTotalTime = math.distance(dashStartPoint, dashEndPoint) / dashSpeed;
             if (dashTotalTime <= 0f)
@@ -80,6 +83,10 @@ public class PlayerDash : MonoBehaviour
                     playerMovement.enabled = true;
                 }
             }
+        }
+        else
+        {
+            spriteRenderer.sharedMaterial.SetInt("dashing", 0);
         }
     }
 }

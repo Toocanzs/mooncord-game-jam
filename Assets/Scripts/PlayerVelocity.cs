@@ -8,10 +8,14 @@ public class PlayerVelocity : MonoBehaviour
     [HideInInspector]
     public float2 velocity;
 
+    public Transform influence;
+
     new private Rigidbody2D rigidbody;
+    private PlayerMovement playerMovement;
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     void Update()
@@ -21,6 +25,15 @@ public class PlayerVelocity : MonoBehaviour
         {
             velocity = 0;
         }
-        rigidbody.velocity = velocity;
+        if (influence != null)
+        {
+            float2 influenceDir = math.normalize(((float3)influence.position).xy - ((float3)transform.position).xy);
+            rigidbody.velocity = velocity + (influenceDir * playerMovement.moveSpeed * 0.7f);
+        }
+        else
+        {
+            rigidbody.velocity = velocity;
+        }
+        
     }
 }

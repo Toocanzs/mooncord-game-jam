@@ -45,6 +45,8 @@ public class Boss1 : MonoBehaviour
 
     [SerializeField]
     private AudioClip gravitySound;
+    [SerializeField]
+    private RoomLaser roomLaser;
 
     void Start()
     {
@@ -93,7 +95,7 @@ public class Boss1 : MonoBehaviour
     private float FireChain()
     {
         StartCoroutine(Chain());
-        return 5f;
+        return 4f;
     }
 
     private float FireShotgun()
@@ -119,7 +121,7 @@ public class Boss1 : MonoBehaviour
         var go = Instantiate(explodePrefab, transform.position, Quaternion.identity, null);
         float2 dir = ((float3)(Player.Instance.transform.position - transform.position)).xy;
         go.transform.right = new Vector3(dir.x, dir.y, 0);
-        return 2f;
+        return 0f;
     }
 
     IEnumerator Lasers(int num)
@@ -143,46 +145,49 @@ public class Boss1 : MonoBehaviour
         return x*0.2f;
     }
 
-    private float FireWall()
+    IEnumerator Wall()
     {
         var go = Instantiate(wallPrefab, transform.position, Quaternion.identity, null);
         float2 dir = ((float3)(Player.Instance.transform.position - transform.position)).xy;
         go.transform.right = new Vector3(dir.x, dir.y, 0);
         go.GetComponent<Arrow>().velocity = bossMoveSpeed * 1.4f;
+        yield return new WaitForSeconds(1f);
+        FireRandomQuickAttack();
+    }
 
+    private float FireWall()
+    {
+        StartCoroutine(Wall());
         //fire another attack durring this
         return 1f;
     }
 
     IEnumerator Gravity()
     {
-        Player.Instance.GetComponent<PlayerMovement>().influence = transform;
+        Player.Instance.GetComponent<PlayerVelocity>().influence = transform;
         GetComponent<StateMachine>().enabled = false;
         AudioPlayer.Instance.PlayOneShot(gravitySound, 3f);
         yield return new WaitForSeconds(2f);
         FireRandomQuickAttack();
-        yield return new WaitForSeconds(2.2f);
+        yield return new WaitForSeconds(2f);
         GetComponent<StateMachine>().enabled = true;
-        Player.Instance.GetComponent<PlayerMovement>().influence = null;
+        Player.Instance.GetComponent<PlayerVelocity>().influence = null;
     }
 
     private void FireRandomQuickAttack()
     {
-        switch (UnityEngine.Random.Range(0, 5))
+        switch (UnityEngine.Random.Range(0, 4))
         {
             case 0:
                 FireLasers();
                 break;
             case 1:
-                FireWall();
-                break;
-            case 2:
                 FireSmg();
                 break;
-            case 3:
+            case 2:
                 FireShotgun();
                 break;
-            case 4:
+            case 3:
                 FireExplode();
                 break;
             default:
@@ -195,13 +200,33 @@ public class Boss1 : MonoBehaviour
         //influence
         //Fire other attacks probably
         StartCoroutine(Gravity());
-        return 5f;
+        return 4f;
     }
 
+    public float FireRoomLaser()
+    {
+        switch(UnityEngine.Random.Range(0,2 + (phase > 2 ? 1 : 0)))
+        {
+            case 0:
+                roomLaser.FireHorizontal();
+                break;
+            case 1:
+                roomLaser.FireVertical();
+                break;
+            case 2:
+                roomLaser.FireHorizontal();
+                roomLaser.FireVertical();
+                break;
+            default:
+                roomLaser.FireHorizontal();
+                break;
+        }
+        return 1f;
+    }
 
     public float ChooseAttack()
     {
-        switch (UnityEngine.Random.Range(0, 7))
+        switch (UnityEngine.Random.Range(0, 8))
         {
             case 0:
                 return FireLasers();
@@ -217,6 +242,8 @@ public class Boss1 : MonoBehaviour
                 return FireChain();
             case 6:
                 return FireGravity();
+            case 7:
+                return FireRoomLaser();
             default:
                 return 0f;
         }
