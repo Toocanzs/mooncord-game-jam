@@ -12,12 +12,10 @@ public class SmgBurst : MonoBehaviour
     [SerializeField]
     private AudioClip audioClip;
     public float angle = 90;
-    [SerializeField]
-    private float totalShotTime = 0.8f;
+    public float totalShotTime = 0.8f;
     private float time = 0f;
     private int shot = 0;
-    [SerializeField]
-    private float totalTrauma = 0.3f;
+    public float totalTrauma = 0.3f;
 
     public float undodgeableChange = 0f;
     private int undodgeableStart = -1;
