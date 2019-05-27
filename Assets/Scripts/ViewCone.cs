@@ -31,6 +31,8 @@ public class ViewCone : MonoBehaviour
 
     private int2 resolution;
 
+    public bool useFog = true;
+
     void Awake()
     {
         //TODO: Change these buffers when resolution changes etc.
@@ -130,6 +132,7 @@ public class ViewCone : MonoBehaviour
 
         compositeMat.SetTexture("_FogOfWar", FogOfWarCamera.Instance.activeTexture);
         compositeMat.SetTexture("_ViewMask", viewMaskTemp);
+        compositeMat.SetInt("useFog", useFog ? 1 : 0);
         
         Graphics.Blit(colorRenderTexture, destination, compositeMat);
         RenderTexture.ReleaseTemporary(viewMaskTemp);

@@ -9,6 +9,9 @@ public class Player : MonoBehaviour
 
     public static event Action OnDeath = delegate { };
     private bool dead = false;
+
+    [SerializeField]
+    private GameObject deathScreen;
     void Start()
     {
         if(Instance == null)
@@ -41,7 +44,14 @@ public class Player : MonoBehaviour
         {
             OnDeath();
             CameraShakeData.Instance.AddTrauma(0.6f);
+            deathScreen.SetActive(true);
             dead = true;
+            StartCoroutine(disableFog());
         }
+    }
+    IEnumerator disableFog()
+    {
+        yield return new WaitForSeconds(2f);
+        Camera.main.GetComponent<ViewCone>().useFog = false;
     }
 }

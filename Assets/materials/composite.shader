@@ -50,6 +50,7 @@
 			float2 FOWsize;
 			float2 cameraSize;
 			float cameraAngle;
+			bool useFog;
 
             float4 frag (v2f i) : SV_Target
             {
@@ -81,8 +82,10 @@
 				uv /= (FOWsize * 2);
 
 				fixed fow = tex2D(_FogOfWar, uv)*_FogOfWarBrightness;
-
-				return col * max(viewMask.rrrr, fow.rrrr);
+				if (useFog)
+					return col * max(viewMask.rrrr, fow.rrrr);
+				else
+					return col;
             }
             ENDCG
         }
