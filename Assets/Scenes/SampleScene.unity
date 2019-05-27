@@ -767,6 +767,7 @@ MonoBehaviour:
   - {fileID: 1911414006}
   shieldRespawnTime: 60
   bossShield: {fileID: 872542908}
+  allAtOnceTimeLimit: 10
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -848,7 +849,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 13111
+    m_Bits: 111415
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -7130,7 +7131,7 @@ Transform:
   m_Children:
   - {fileID: 1605275289}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &701549506
 GameObject:
@@ -11082,7 +11083,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1.3875, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2043033963
 MonoBehaviour:
@@ -11231,7 +11232,7 @@ PrefabInstance:
     - target: {fileID: 2349141502533997411, guid: 49389bcc7fcd2ca4ba01cfa4b1abeb71,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2349141502533997411, guid: 49389bcc7fcd2ca4ba01cfa4b1abeb71,
         type: 3}

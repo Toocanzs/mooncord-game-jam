@@ -5,6 +5,7 @@
 		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
 		_Color("Tint", Color) = (1,1,1,1)
 		[Toggle]_IsWall("Is Wall", int) = 0
+		[Toggle]_ExpandLeft("_ExpandLeft", int) = 0
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 0
 		[HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
 		[HideInInspector] _Flip("Flip", Vector) = (1,1,1,1)
@@ -116,6 +117,7 @@
 				sampler2D _MainTex;
 				sampler2D _AlphaTex;
 				bool _IsWall;
+				bool _ExpandLeft;
 				float3 transformScale;
 
 				fixed4 SampleSpriteTexture(float2 uv)
@@ -140,10 +142,19 @@
 				buffers SpriteFrag(v2f IN)
 				{
 					buffers o = (buffers)0;
-					float2 uv = IN.texcoord * transformScale.xy;
+					float2 uv = IN.texcoord;
+					uv.x *= transformScale.x;
 					uv.x -= (transformScale.x / 2);
 					if (uv.x > 0)
-						discard;
+					{
+						if(!_ExpandLeft)
+							discard;
+					}
+					else
+					{
+						if (_ExpandLeft)
+							discard;
+					}
 					fixed4 c = SampleSpriteTexture(uv) * IN.color;
 					c.rgb *= c.a;
 					o.color = c;
