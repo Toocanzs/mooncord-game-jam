@@ -14,7 +14,6 @@ public class LaserShot : MonoBehaviour
     private AnimationCurve animationCurve;
     [SerializeField]
     private AudioClip shot;
-    private AudioSource audioSource;
 
     private float time = 0f;
     [SerializeField]
@@ -29,7 +28,6 @@ public class LaserShot : MonoBehaviour
     {
         colliderObject.SetActive(false);
         time = 0f;
-        audioSource = GetComponent<AudioSource>();
         playedSound = false;
     }
 
@@ -44,7 +42,7 @@ public class LaserShot : MonoBehaviour
         {
             if(!playedSound)
             {
-                audioSource.PlayOneShot(shot);
+                AudioPlayer.Instance.PlayOneShot(shot);
                 playedSound = true;
             }
             colliderObject.SetActive(true);

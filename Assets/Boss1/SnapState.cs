@@ -45,7 +45,7 @@ public class SnapState : BaseState
         if(time > 6f && !played)
         {
             played = true;
-            boss.audioSource.PlayOneShot(boss.scanTargetFound);
+            AudioPlayer.Instance.PlayOneShot(boss.scanTargetFound);
             boss.batteryManager.enabled = true;
         }
         if(time > totalWaitTime)

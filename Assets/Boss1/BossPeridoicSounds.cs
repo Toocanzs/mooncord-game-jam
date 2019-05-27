@@ -26,7 +26,7 @@ public class BossPeridoicSounds : MonoBehaviour
             AudioClip clip = audioClips[Random.Range(0, audioClips.Count)];
             startPlayTime += clip.length;
             audioClips.Remove(clip);
-            audioSource.PlayOneShot(clip);
+            AudioPlayer.Instance.PlayOneShot(clip);
         }
     }
 }

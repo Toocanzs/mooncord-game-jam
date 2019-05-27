@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(SpriteRenderer), typeof(AudioSource))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Battery : MonoBehaviour
 {
     public float maxHP = 30;
     public float currentHP;
-    private AudioSource audioSource;
+    [SerializeField]
+    private AudioClip hitSound;
     public event Action<GameObject> OnBatteryDestroyed = delegate { };
 
     public SpriteRenderer batteryProgressBarSpriteRenderer;
@@ -20,7 +21,6 @@ public class Battery : MonoBehaviour
     void OnEnable()
     {
         currentHP = maxHP;
-        audioSource = GetComponent<AudioSource>();
         shield.transform.rotation = Quaternion.Euler(new Vector3(0,0,UnityEngine.Random.Range(0f, 360f)));
     }
     void Update()
@@ -38,6 +38,6 @@ public class Battery : MonoBehaviour
     public void Hit(float damage)
     {
         currentHP -= damage;
-        audioSource.PlayOneShot(audioSource.clip);
+        AudioPlayer.Instance.PlayOneShot(hitSound, 0.5f);
     }
 }

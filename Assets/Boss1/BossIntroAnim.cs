@@ -25,7 +25,7 @@ public class BossIntroAnim : MonoBehaviour
     {
         if(playSound && lastPlaySoundBool == false)
         {
-            audioSource.PlayOneShot(audioClips[soundNum], volume);
+            AudioPlayer.Instance.PlayOneShot(audioClips[soundNum], volume);
         }
         lastPlaySoundBool = playSound;
     }

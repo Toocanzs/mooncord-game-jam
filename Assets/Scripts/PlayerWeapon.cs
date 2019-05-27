@@ -40,7 +40,7 @@ public class PlayerWeapon : MonoBehaviour
 
     private void Shoot(float2 dir)
     {
-        audioSource.PlayOneShot(clip);
+        AudioPlayer.Instance.PlayOneShot(clip, 0.4f);
         float angle = math.degrees(math.atan2(dir.y, dir.x));
         GameObject arrow = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(new Vector3(0,0, angle)));
     }

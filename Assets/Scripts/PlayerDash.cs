@@ -45,7 +45,7 @@ public class PlayerDash : MonoBehaviour
         }
         if (Input.GetButtonDown("Jump") && !dashing)
         {
-            audioSource.PlayOneShot(dashSound, 0.5f);
+            AudioPlayer.Instance.PlayOneShot(dashSound, 0.5f);
             dashing = true;
             playerMovement.enabled = false;
             dashTime = 0f;

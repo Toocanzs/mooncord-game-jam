@@ -47,7 +47,7 @@ public class DoorClose : MonoBehaviour
     private void HitWall(float trauma)
     {
         if(hits < 2)
-            audioSource.PlayOneShot(audioClips[0], trauma);
+            AudioPlayer.Instance.PlayOneShot(audioClips[0], trauma);
         hits++;
         CameraShakeData.Instance.AddTrauma(trauma);
     }

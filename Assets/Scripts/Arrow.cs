@@ -4,7 +4,6 @@ using UnityEngine;
 using Unity.Mathematics;
 using System;
 
-[RequireComponent(typeof(AudioSource))]
 public class Arrow : MonoBehaviour
 {
     [SerializeField]
@@ -22,7 +21,6 @@ public class Arrow : MonoBehaviour
     private bool parentOnHit = true;
     [SerializeField]
     private AudioClip onHitClip;
-    private AudioSource audioSource;
     [SerializeField]
     private GameObject[] disableOnHit;
 
@@ -34,7 +32,6 @@ public class Arrow : MonoBehaviour
     {
         if(destroyTimeout)
             Destroy(gameObject, 6f);
-        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -79,7 +76,7 @@ public class Arrow : MonoBehaviour
                     if (parentOnHit)
                         transform.parent = hit.collider.transform;
                     if(onHitClip != null)
-                        audioSource.PlayOneShot(onHitClip);
+                        AudioPlayer.Instance.PlayOneShot(onHitClip, 0.2f);
                     if(destroyOnHit)
                         Destroy(this);
                 }
