@@ -26,23 +26,27 @@ public class Chain : MonoBehaviour
     private Player pulledPlayer;
     private PullingType pullingType;
     private Vector3 finalHitPoint;
+
+    public Transform parent;
     void Start()
     {
         startPosition = transform.position;
         arrow = GetComponent<Arrow>();
         arrow.OnHit += OnHitHandler;
+        Destroy(gameObject, 6f);
     }
 
     void Update()
     {
-        chain.transform.localScale = new Vector3(math.distance(startPosition, transform.position)*2, 1, 1);
         if(pulling)
         {
             if (pullingType == PullingType.PLAYER)
             {
-                transform.position = Vector3.MoveTowards(transform.position, startPosition, pullSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, parent.position, pullSpeed * Time.deltaTime);
                 pulledPlayer.transform.position = transform.position;
-                if (math.distancesq(startPosition, pulledPlayer.transform.position) < chainReleaseDistance * chainReleaseDistance)
+                chain.transform.position = parent.position;
+                chain.transform.rotation = chain.transform.RotationTo(Player.Instance.transform.position, 180f);
+                if (math.distancesq(parent.position, pulledPlayer.transform.position) < chainReleaseDistance * chainReleaseDistance)
                 {
                     foreach (var mono in reenableAfterPull)
                     {
@@ -53,14 +57,23 @@ public class Chain : MonoBehaviour
             }
             else if(pullingType == PullingType.SELF)
             {
-                transform.parent.position = Vector3.MoveTowards(transform.parent.position, transform.position, pullSpeed * Time.deltaTime);
-                startPosition = transform.parent.position;
+                parent.position = Vector3.MoveTowards(parent.position, finalHitPoint, pullSpeed * Time.deltaTime);
+                startPosition = parent.position;
                 transform.position = finalHitPoint;
-                if (math.distancesq(transform.parent.position, transform.position) < chainReleaseDistance * chainReleaseDistance)
+                parent.GetComponent<StateMachine>().enabled = false;
+                chain.transform.position = parent.position;
+                chain.transform.rotation = chain.transform.RotationTo(finalHitPoint, 180f);
+                if (math.distancesq(parent.position, transform.position) < chainReleaseDistance * chainReleaseDistance)
                 {
+                    parent.GetComponent<StateMachine>().enabled = true;
                     Destroy(gameObject);
                 }
             }
+            chain.transform.localScale = new Vector3(math.distance(parent.position, transform.position) * 2, 1, 1);
+        }
+        else
+        {
+            chain.transform.localScale = new Vector3(math.distance(parent.position, transform.position) * 2, 1, 1);
         }
     }
 
@@ -90,5 +103,22 @@ public class Chain : MonoBehaviour
             finalHitPoint = transform.position;
             CameraShakeData.Instance.AddTrauma(0.2f);
         }
+    }
+}
+
+public static class TransformExtension
+{
+    public static Quaternion RotationTo(this Transform transform, Vector3 other)
+    {
+        float2 dir = math.normalize(((float3)other).xy - ((float3)transform.position).xy);
+        float angle = math.degrees(math.atan2(dir.y, dir.x));
+        return Quaternion.Euler(new Vector3(0, 0, angle));
+    }
+
+    public static Quaternion RotationTo(this Transform transform, Vector3 other, float offset)
+    {
+        float2 dir = math.normalize(((float3)other).xy - ((float3)transform.position).xy);
+        float angle = math.degrees(math.atan2(dir.y, dir.x));
+        return Quaternion.Euler(new Vector3(0, 0, angle + offset));
     }
 }

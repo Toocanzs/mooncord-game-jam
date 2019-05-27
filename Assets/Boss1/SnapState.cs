@@ -51,7 +51,7 @@ public class SnapState : BaseState
         if(time > totalWaitTime)
         {
             time = 0f;
-            return null;
+            return typeof(ChaseState);
         }
         return GetType();
     }

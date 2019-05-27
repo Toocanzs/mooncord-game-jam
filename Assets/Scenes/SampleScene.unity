@@ -12463,7 +12463,10 @@ MonoBehaviour:
   scanTargetFound: {fileID: 8300000, guid: 54035f4b3810b584290f0c30610e2ccc, type: 3}
   batteryManager: {fileID: 422521164}
   hitSnapState: 0
+  bossMoveSpeed: 4
   phase: 0
+  chainPrefab: {fileID: 1288154421674730923, guid: 0fb474de9cc5f9f41b4f1cd446c61776,
+    type: 3}
 --- !u!114 &1605275294
 MonoBehaviour:
   m_ObjectHideFlags: 0

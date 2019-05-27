@@ -66,7 +66,7 @@ public class Arrow : MonoBehaviour
 
                         transform.position = new Vector3(hit.point.x, hit.point.y, 0)
                             + ((new Vector3(reflected.x, reflected.y, 0) * velocity * Time.deltaTime));
-                        if(GetComponent<DamagePlayerOnTouch>() == null)
+                        if (GetComponent<DamagePlayerOnTouch>() == null)
                         {
                             spriteRenderer.material = reflectedMaterial;
                             gameObject.AddComponent<DamagePlayerOnTouch>();
@@ -74,6 +74,7 @@ public class Arrow : MonoBehaviour
                             col.isTrigger = true;
                             col.size = new Vector2(0.8f, 0.2f);
                             gameObject.layer = LayerMask.NameToLayer("Enemy Projectile");
+                            destroyGameObject = true;
                         }
                     }
                 }

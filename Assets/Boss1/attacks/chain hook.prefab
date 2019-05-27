@@ -320,14 +320,16 @@ MonoBehaviour:
   velocity: 30
   layerMask:
     serializedVersion: 2
-    m_Bits: 37175
+    m_Bits: 4352
   reflectable: 0
   destroyOnHit: 1
   destroyTimeout: 0
   parentOnHit: 0
+  destroyGameObject: 0
   onHitClip: {fileID: 8300000, guid: b8ba9c51cd2578a458e1f37d3491c017, type: 3}
   disableOnHit:
   - {fileID: 1409246489}
+  reflectedMaterial: {fileID: 0}
 --- !u!114 &2047567357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,8 +343,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chain: {fileID: 8151289806909270822}
-  pullSpeed: 20
+  pullSpeed: 14
   chainReleaseDistance: 1
+  parent: {fileID: 0}
 --- !u!82 &5720093877422500426
 AudioSource:
   m_ObjectHideFlags: 0
