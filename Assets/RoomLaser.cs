@@ -19,6 +19,17 @@ public class RoomLaser : MonoBehaviour
 
     private List<Transform> horizontalTransforms = new List<Transform>();
     private List<Transform> verticalTransforms = new List<Transform>();
+
+    [SerializeField]
+    private GameObject dodgeableBullet;
+    [SerializeField]
+    private GameObject undodgeableBullet;
+
+    [SerializeField]
+    private AudioClip dodgeableChargeupClip;
+    [SerializeField]
+    private AudioClip dodgeableClip;
+    int numDodgeable = 8;
     void Start()
     {
         foreach (Transform child in horizontal.transform)
@@ -62,6 +73,29 @@ public class RoomLaser : MonoBehaviour
         }
     }
 
+    private IEnumerator Dodgeable()
+    {
+        AudioPlayer.Instance.PlayOneShot(dodgeableChargeupClip);
+        yield return new WaitForSeconds(2f);
+        AudioPlayer.Instance.PlayOneShot(dodgeableClip);
+        int start = Random.Range(0, verticalTransforms.Count-numDodgeable);
+        int end = start + 7;
+        for (int i = 0; i < verticalTransforms.Count; i++)
+        {
+            GameObject go;
+            if (i > start && i < end)
+            {
+                go = Instantiate(dodgeableBullet, verticalTransforms[i].position, verticalTransforms[i].rotation);
+            }
+            else
+            {
+                go = Instantiate(undodgeableBullet, verticalTransforms[i].position, verticalTransforms[i].rotation);
+            }
+            go.GetComponent<Arrow>().velocity = 10f;
+        }
+        
+    }
+
     private IEnumerator HorizontalSplit()
     {
         for (int i = 0; i < horizontalTransforms.Count; i++)
@@ -99,6 +133,11 @@ public class RoomLaser : MonoBehaviour
     public void FireHorizontal()
     {
         StartCoroutine(Horizontal());
+    }
+
+    public void FireDodgebable()
+    {
+        StartCoroutine(Dodgeable());
     }
 
     public void FireVertical()

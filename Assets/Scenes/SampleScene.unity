@@ -1454,7 +1454,7 @@ MonoBehaviour:
   - {fileID: 1047869811}
   - {fileID: 269568886}
   - {fileID: 1911414006}
-  shieldRespawnTime: 60
+  shieldRespawnTime: 45
   bossShield: {fileID: 872542908}
   allAtOnce: 0
   allAtOnceTimeLimit: 10
@@ -20018,6 +20018,13 @@ MonoBehaviour:
   horizontal: {fileID: 1659445473}
   vertical: {fileID: 1089908104}
   timeBetweenShots: 0.1
+  dodgeableBullet: {fileID: 5609806829840287773, guid: bf4b8d85e87c3dc49afac3cc91412117,
+    type: 3}
+  undodgeableBullet: {fileID: 7998146958253310850, guid: 7bfa8dbd81eac754ea64df8149fe8299,
+    type: 3}
+  dodgeableChargeupClip: {fileID: 8300000, guid: 6ca046c4a32ff534d96cbaa553888e2f,
+    type: 3}
+  dodgeableClip: {fileID: 8300000, guid: 33a90244a76ea8e46bcf2fecf476b747, type: 3}
 --- !u!1 &1439492470
 GameObject:
   m_ObjectHideFlags: 0

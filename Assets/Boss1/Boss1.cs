@@ -253,9 +253,15 @@ public class Boss1 : MonoBehaviour
         return 4f;
     }
 
+    private float FireDodgeableWall()
+    {
+        roomLaser.FireDodgebable();
+        return 4f;
+    }
+
     public float ChooseAttack()
     {
-        switch (UnityEngine.Random.Range(0, 7 + (phase > 2 ? 1 : 0)))
+        switch (UnityEngine.Random.Range(0, 8 + (phase > 1 ? 1 : 0)))
         {
             case 0:
                 return FireLasers();
@@ -272,6 +278,8 @@ public class Boss1 : MonoBehaviour
             case 6:
                 return FireGravity();
             case 7:
+                return FireDodgeableWall();
+            case 8:
                 return FireRoomLaser();
             default:
                 return 0f;
